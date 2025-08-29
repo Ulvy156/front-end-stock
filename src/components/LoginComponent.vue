@@ -50,7 +50,7 @@ import inputField from '@/composables/input-field.vue'
 import commonButton from '@/common/common-button.vue'
 import { ref } from 'vue'
 import { api } from '@/plugins/axios'
-
+import { setCookie } from '@/utils/useCookies'
 //properties
 const loginData = ref({
   email: '',
@@ -59,14 +59,13 @@ const loginData = ref({
 const isShowPassword = ref(false);
 
 //functions
-function login() {
-  api.post('/auth/login', loginData.value)
+async function login() {
+  await api.post('/auth/login', loginData.value)
   .then((res) => {
-    console.log(res.data);
+    setCookie('access_token', res.data.access_token, 3600) // 1h
   })
   .catch((err)=>{
     console.error(err);
-
   })
 
 }
