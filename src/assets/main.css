@@ -1,1 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+* {
+  font-family: 'Nata Sans', sans-serif;
+  font-optical-sizing: auto;
+}
+
+body {
+  /* background: linear-gradient(180deg, #0a0a0a 0%, #1c1c1c 100%); */
+}
