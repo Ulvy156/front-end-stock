@@ -31,7 +31,7 @@ api.interceptors.response.use(
 
         // call refresh endpoint
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL}/auth/refresh`,
+          `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
           { refreshToken } // send in body
         )
 

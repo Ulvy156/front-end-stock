@@ -1,5 +1,10 @@
-import { useRouter } from "vue-router";
+// useNavigate.ts
+import { useRouter } from "vue-router"
 
-export default function useNavigation(router: string){
-  useRouter().push(`/${router}`)
+export function useNavigation() {
+  const router = useRouter()
+  const navigate = (path: string) => {
+    router.push(`/${path}`)
+  }
+  return { navigate }
 }

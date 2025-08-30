@@ -39,7 +39,7 @@
     </section>
     <img
     class="w-1/2"
-    src="../assets/undraw_access-account_aydp.svg" alt="login-image" >
+    src="../../assets//undraw_access-account_aydp.svg" alt="login-image" >
   </form>
 </template>
 
@@ -51,6 +51,8 @@ import commonButton from '@/components/common/common-button.vue'
 import { ref } from 'vue'
 import { api } from '@/plugins/axios'
 import { setCookie } from '@/utils/useCookies'
+import { setLocalStorage } from '@/utils/useLocalStorage'
+
 //properties
 const loginData = ref({
   email: '',
@@ -62,10 +64,14 @@ const isShowPassword = ref(false);
 async function login() {
   await api.post('/auth/login', loginData.value)
   .then(async (res) => {
-    setCookie('access_token', res.data.access_token, 3600) // 1h
-    setCookie('refresh_token', res.data.refreshToken, 3600) // 1h
+    console.log(res.data);
+
+    setCookie('access_token', res.data.accessToken, 3600) // 1h
+    setCookie('refresh_token', res.data.refreshToken, 604800) // 1h
     // store user info
     await getUserProfile();
+    redirectByRole(res.data.is_admin);
+
   })
   .catch((err)=>{
     console.error(err);
@@ -73,13 +79,18 @@ async function login() {
 
 }
 
+function redirectByRole(is_admin: boolean) {
+  if(!is_admin){
+    location.href = '/user'
+  }
+}
 async function getUserProfile() {
   await api.get('/auth/profile')
   .then((res) => {
-    console.log(res.data);
+    setCookie('user_id', res.data.id, 604800) // 1h
+    setCookie('is_admin', res.data.is_admin, 604800) // 1h
 
-    setCookie('user_id', res.data.id, 3600) // 1h
-    setCookie('is_admin', res.data.is_admin, 3600) // 1h
+    setLocalStorage('name', res.data.name);
   })
 }
 </script>
