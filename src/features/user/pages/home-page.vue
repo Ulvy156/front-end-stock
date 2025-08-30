@@ -1,7 +1,5 @@
 <template>
-  <section>
-    navbar user
-  </section>
+  <h1>home</h1>
 </template>
 
 <script setup lang="ts">

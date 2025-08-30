@@ -1,4 +1,13 @@
 {
-  "hello": "Hello",
-  "login": "Login"
+  "hello": "សួស្តី",
+  "login": "ចូល",
+  "navbar": {
+    "dashboard":"Dashboard",
+    "orders":"Orders",
+    "customers":"Customers",
+    "stock":"Stock",
+    "staff":"Staff",
+    "report":"Report",
+    "sell":"Sell"
+  }
 }

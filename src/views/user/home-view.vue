@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import homePage from '@/pages/user/home-page.vue';
+import homePage from '@/features/user/pages/home-page.vue';
 </script>

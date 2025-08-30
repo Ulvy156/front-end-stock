@@ -9,8 +9,11 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AdminNavbar: typeof import('./src/components/navbar/admin-navbar.vue')['default']
+    CommonAvatar: typeof import('./src/components/common/common-avatar.vue')['default']
+    CommonButton: typeof import('./src/components/common/common-button.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElInput: typeof import('element-plus/es')['ElInput']
+    InputField: typeof import('./src/components/reusable/input-field.vue')['default']
     LoginComponent: typeof import('./src/components/LoginComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

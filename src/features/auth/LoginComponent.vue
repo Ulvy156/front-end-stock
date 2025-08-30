@@ -46,8 +46,8 @@
 <script setup lang="ts">
 import iconEmail from '@/icons/icon-email.vue'
 import iconPassword from '@/icons/icon-password.vue'
-import inputField from '@/composables/input-field.vue'
-import commonButton from '@/common/common-button.vue'
+import inputField from '@/components/reusable/input-field.vue'
+import commonButton from '@/components/common/common-button.vue'
 import { ref } from 'vue'
 import { api } from '@/plugins/axios'
 import { setCookie } from '@/utils/useCookies'
@@ -63,6 +63,7 @@ async function login() {
   await api.post('/auth/login', loginData.value)
   .then(async (res) => {
     setCookie('access_token', res.data.access_token, 3600) // 1h
+    setCookie('refresh_token', res.data.refreshToken, 3600) // 1h
     // store user info
     await getUserProfile();
   })

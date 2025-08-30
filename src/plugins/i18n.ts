@@ -4,12 +4,12 @@ import kh from "@/locales/kh.json"
 
 type MessageSchema = typeof en  // type inference from your JSON
 
-const lng = (localStorage.getItem("lng") as "en" | "kh") ?? "en"
+const lng = (localStorage.getItem("lng") as "en" | "kh") ?? "kh"
 
 const i18n = createI18n<[MessageSchema], "en" | "kh">({
   legacy: false,
   locale: lng,
-  fallbackLocale: "en",
+  fallbackLocale: "kh",
   globalInjection: true,
   messages: {
     en,
