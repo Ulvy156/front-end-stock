@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import userLayout from './layouts/user-layout.vue';
+</script>
 
 <template>
-  <router-view/>
+  <userLayout/>
 </template>
 
 <style scoped></style>

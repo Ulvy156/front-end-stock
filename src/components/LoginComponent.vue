@@ -61,12 +61,24 @@ const isShowPassword = ref(false);
 //functions
 async function login() {
   await api.post('/auth/login', loginData.value)
-  .then((res) => {
+  .then(async (res) => {
     setCookie('access_token', res.data.access_token, 3600) // 1h
+    // store user info
+    await getUserProfile();
   })
   .catch((err)=>{
     console.error(err);
   })
 
+}
+
+async function getUserProfile() {
+  await api.get('/auth/profile')
+  .then((res) => {
+    console.log(res.data);
+
+    setCookie('user_id', res.data.id, 3600) // 1h
+    setCookie('is_admin', res.data.is_admin, 3600) // 1h
+  })
 }
 </script>

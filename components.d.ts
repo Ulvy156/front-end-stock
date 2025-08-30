@@ -8,9 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AdminNavbar: typeof import('./src/components/navbar/admin-navbar.vue')['default']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElInput: typeof import('element-plus/es')['ElInput']
     LoginComponent: typeof import('./src/components/LoginComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserHome: typeof import('./src/components/user/user-home.vue')['default']
+    UserNavbar: typeof import('./src/components/navbar/user-navbar.vue')['default']
   }
 }
