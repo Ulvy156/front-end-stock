@@ -5,6 +5,22 @@
   font-optical-sizing: auto;
 }
 
+:root{
+  --text-gray: rgb(160, 157, 157);
+  --text-blue: #155dfc;
+  --green: rgb(20, 231, 20);
+}
+
 body {
   /* background: linear-gradient(180deg, #0a0a0a 0%, #1c1c1c 100%); */
+}
+
+.gray {
+  color: var(--text-gray);
+}
+.blue {
+  color: var(--text-blue);
+}
+.green{
+  color: var(--green);
 }

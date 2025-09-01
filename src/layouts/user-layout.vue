@@ -1,7 +1,7 @@
 <template>
   <mainLayout>
     <template #sidebar>
-      <userNavbar/>
+      <userNavbar />
     </template>
   </mainLayout>
 </template>

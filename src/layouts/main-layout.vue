@@ -1,11 +1,11 @@
 <template>
-  <section class="flex gap-x-5 w-full h-screen">
-    <nav :class="closeMenubar ? 'close-menu' : 'open-menu'" class="shadow-xl">
+  <section class="flex gap-x-5 w-full min-h-screen overflow-auto">
+    <nav :class="closeMenubar ? 'close-menu' : 'open-menu'" class="shadow-xl sticky z-10 left-0 top-0">
       <!-- side bar -->
-      <div class="flex text-blue-600 m-auto p-2 items-center justify-between shadow-sm  px-5">
+      <div class="flex blue m-auto p-2 items-center justify-between shadow-sm  px-5">
         <div class="flex items-center gap-x-1" v-show="!closeMenubar">
           <commonAvatar />
-          <h1 class="text-xl text-blue-600">ឈ្មោះ</h1>
+          <h1 class="text-xl blue">{{userName}}</h1>
         </div>
         <svg :class="{ 'm-auto': closeMenubar }" @click="closeMenubar = !closeMenubar" xmlns="http://www.w3.org/2000/svg"
           class="size-5 cursor-pointer" viewBox="0 0 16 16">
@@ -16,11 +16,11 @@
 
       </div>
       <!-- menu list -->
-      <div v-show="!closeMenubar">
+      <aside class="flex flex-col justify-between h-[90%]" v-show="!closeMenubar">
         <slot name="sidebar"></slot>
-      </div>
+      </aside>
     </nav>
-    <main class="w-full overflow-y-auto">
+    <main class="w-full h-screen overflow-auto ">
       <router-view v-slot="{ Component }">
         <transition name="slide" mode="out-in">
           <component :is="Component" :key="$route.fullPath"/>
@@ -33,10 +33,12 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import commonAvatar from '@/components/common/common-avatar.vue';
+import { getLocalStorage } from '@/utils/useLocalStorage';
 
 // properties
 const previousActiveIndex = ref(0);
 const closeMenubar = ref(false);
+const userName = getLocalStorage('name');
 
 //functions
 function onClickNavItem() {
@@ -44,7 +46,6 @@ function onClickNavItem() {
   if (navList) {
     Array.from(navList).forEach((navItem: Element, index: number) => {
       // add click listener to each nav-item
-
       navItem.addEventListener('click', () => {
         // add active class if user click on
         previousActiveIndex.value = index;

@@ -1,7 +1,7 @@
 <template>
   <section class="px-5 mt-2 grid grid-cols-1 gap-y-1" id="nav-list">
     <!-- dashboard -->
-    <div class=" nav-item">
+    <div id="dashboard" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path fill="currentColor"
           d="M13.5 8.183V4.817q0-.357.234-.587t.58-.23h4.88q.347 0 .576.23t.23.587v3.366q0 .358-.234.587q-.234.23-.58.23h-4.88q-.346 0-.576-.23t-.23-.587M4 11.2V4.8q0-.34.234-.57t.58-.23h4.88q.347 0 .576.23t.23.57v6.4q0 .34-.234.57t-.58.23h-4.88q-.346 0-.576-.23T4 11.2m9.5 8v-6.4q0-.34.234-.57t.58-.23h4.88q.347 0 .576.23t.23.57v6.4q0 .34-.234.57t-.58.23h-4.88q-.346 0-.576-.23t-.23-.57M4 19.183v-3.366q0-.357.234-.587t.58-.23h4.88q.347 0 .576.23t.23.587v3.366q0 .358-.234.587q-.234.23-.58.23h-4.88q-.346 0-.576-.23T4 19.183M5 11h4.5V5H5zm9.5 8H19v-6h-4.5zm0-11H19V5h-4.5zM5 19h4.5v-3H5zm4.5-3" />
@@ -9,7 +9,7 @@
       <h2>{{ $t("navbar.dashboard") }}</h2>
     </div>
     <!-- sell -->
-    <div class=" nav-item">
+    <div id="sell" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
           <path d="M14.5 10.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0" />
@@ -22,7 +22,7 @@
       <h2>{{ $t("navbar.sell") }}</h2>
     </div>
     <!-- order -->
-    <div class=" nav-item">
+    <div id="order" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path fill="currentColor"
           d="m17.371 19.827l2.84-2.796l-.626-.627l-2.214 2.183l-.955-.975l-.627.632zM6.77 8.731h10.462v-1H6.769zM18 22.116q-1.671 0-2.835-1.165Q14 19.787 14 18.116t1.165-2.836T18 14.116t2.836 1.164T22 18.116q0 1.67-1.164 2.835Q19.67 22.116 18 22.116M4 20.769V5.616q0-.672.472-1.144T5.616 4h12.769q.67 0 1.143.472q.472.472.472 1.144v5.944q-.244-.09-.484-.154q-.241-.064-.516-.1v-5.69q0-.231-.192-.424T18.384 5H5.616q-.231 0-.424.192T5 5.616V19.05h6.344q.068.41.176.802q.109.392.303.748l-.034.034l-1.135-.826l-1.346.961l-1.346-.961l-1.346.961l-1.347-.961zm2.77-4.5h4.709q.056-.275.138-.515t.192-.485H6.77zm0-3.769h7.31q.49-.387 1.05-.645q.56-.259 1.197-.355H6.769zM5 19.05V5z" />
@@ -30,7 +30,7 @@
       <h2>{{ $t("navbar.orders") }}</h2>
     </div>
     <!-- customer -->
-    <div class=" nav-item">
+    <div id="customer" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
         <path fill="none" stroke="currentColor"
           d="M10.8 14v-1.7a2 2 0 0 0-2-2H7.2a2 2 0 0 0-2 2V14m9.3-3.5V9.3a2 2 0 0 0-2-2H11m-9.5 3.2V9.3a2 2 0 0 1 2-2H5m4.605-.195a1.605 1.605 0 1 1-3.21 0a1.605 1.605 0 0 1 3.21 0Zm3.8-3a1.605 1.605 0 1 1-3.21 0a1.605 1.605 0 0 1 3.21 0Zm-7.5 0a1.605 1.605 0 1 1-3.21 0a1.605 1.605 0 0 1 3.21 0Z"
@@ -39,7 +39,7 @@
       <h2>{{ $t("navbar.customers") }}</h2>
     </div>
     <!-- stock -->
-    <div class=" nav-item">
+    <div id="stock" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path fill="none" stroke="currentColor" stroke-width="1.5"
           d="M2 17V6h4v11zm8 2v-6h4v6zM4 6V1m8 12V8m0 15v-4m-8 1v-3M19.5 3V1m0 11v-2M22 5V4a1 1 0 0 0-1-1h-3a1 1 0 0 0-1 1v.93a1 1 0 0 0 .804.98l3.392.68a1 1 0 0 1 .804.98V9a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V8" />
@@ -47,7 +47,7 @@
       <h2>{{ $t("navbar.stock") }}</h2>
     </div>
     <!-- staff -->
-    <div class=" nav-item">
+    <div id="staff" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
         <path fill="currentColor"
           d="M18.42 16.31a5.7 5.7 0 1 1 5.76-5.7a5.74 5.74 0 0 1-5.76 5.7m0-9.4a3.7 3.7 0 1 0 3.76 3.7a3.74 3.74 0 0 0-3.76-3.7" />
@@ -60,8 +60,8 @@
       </svg>
       <h2>{{ $t("navbar.staff") }}</h2>
     </div>
-    <!-- staff -->
-    <div class=" nav-item">
+    <!-- report -->
+    <div id="report" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5">
           <path
@@ -74,10 +74,39 @@
       </svg>
       <h2>{{ $t("navbar.report") }}</h2>
     </div>
+    <!-- setting -->
+    <div id="setting" class=" nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 1024 1024">
+        <path fill="currentColor"
+          d="m924.8 625.7l-65.5-56c3.1-19 4.7-38.4 4.7-57.8s-1.6-38.8-4.7-57.8l65.5-56a32.03 32.03 0 0 0 9.3-35.2l-.9-2.6a443.7 443.7 0 0 0-79.7-137.9l-1.8-2.1a32.12 32.12 0 0 0-35.1-9.5l-81.3 28.9c-30-24.6-63.5-44-99.7-57.6l-15.7-85a32.05 32.05 0 0 0-25.8-25.7l-2.7-.5c-52.1-9.4-106.9-9.4-159 0l-2.7.5a32.05 32.05 0 0 0-25.8 25.7l-15.8 85.4a351.9 351.9 0 0 0-99 57.4l-81.9-29.1a32 32 0 0 0-35.1 9.5l-1.8 2.1a446 446 0 0 0-79.7 137.9l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.3 56.6c-3.1 18.8-4.6 38-4.6 57.1c0 19.2 1.5 38.4 4.6 57.1L99 625.5a32.03 32.03 0 0 0-9.3 35.2l.9 2.6c18.1 50.4 44.9 96.9 79.7 137.9l1.8 2.1a32.12 32.12 0 0 0 35.1 9.5l81.9-29.1c29.8 24.5 63.1 43.9 99 57.4l15.8 85.4a32.05 32.05 0 0 0 25.8 25.7l2.7.5a449.4 449.4 0 0 0 159 0l2.7-.5a32.05 32.05 0 0 0 25.8-25.7l15.7-85a350 350 0 0 0 99.7-57.6l81.3 28.9a32 32 0 0 0 35.1-9.5l1.8-2.1c34.8-41.1 61.6-87.5 79.7-137.9l.9-2.6c4.5-12.3.8-26.3-9.3-35M788.3 465.9c2.5 15.1 3.8 30.6 3.8 46.1s-1.3 31-3.8 46.1l-6.6 40.1l74.7 63.9a370 370 0 0 1-42.6 73.6L721 702.8l-31.4 25.8c-23.9 19.6-50.5 35-79.3 45.8l-38.1 14.3l-17.9 97a377.5 377.5 0 0 1-85 0l-17.9-97.2l-37.8-14.5c-28.5-10.8-55-26.2-78.7-45.7l-31.4-25.9l-93.4 33.2c-17-22.9-31.2-47.6-42.6-73.6l75.5-64.5l-6.5-40c-2.4-14.9-3.7-30.3-3.7-45.5c0-15.3 1.2-30.6 3.7-45.5l6.5-40l-75.5-64.5c11.3-26.1 25.6-50.7 42.6-73.6l93.4 33.2l31.4-25.9c23.7-19.5 50.2-34.9 78.7-45.7l37.9-14.3l17.9-97.2c28.1-3.2 56.8-3.2 85 0l17.9 97l38.1 14.3c28.7 10.8 55.4 26.2 79.3 45.8l31.4 25.8l92.8-32.9c17 22.9 31.2 47.6 42.6 73.6L781.8 426zM512 326c-97.2 0-176 78.8-176 176s78.8 176 176 176s176-78.8 176-176s-78.8-176-176-176m79.2 255.2A111.6 111.6 0 0 1 512 614c-29.9 0-58-11.7-79.2-32.8A111.6 111.6 0 0 1 400 502c0-29.9 11.7-58 32.8-79.2C454 401.6 482.1 390 512 390s58 11.6 79.2 32.8A111.6 111.6 0 0 1 624 502c0 29.9-11.7 58-32.8 79.2" />
+      </svg>
+      <h2>{{ $t("navbar.setting") }}</h2>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { addClassNameById } from '@/utils/useToggleClass';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
+//properties
+// add active based on router
+function addActiveLink() {
+  const path = useRouter().currentRoute.value.path;
+  const className = 'active-nav';
 
+  switch(path){
+    case "/":
+      addClassNameById('dashboard', className);
+      break;
+    case "/sell":
+      addClassNameById('dashboard', className);
+      break;
+  }
+}
+
+onMounted(()=>{
+  addActiveLink();
+})
 </script>
