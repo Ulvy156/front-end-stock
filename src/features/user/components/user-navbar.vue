@@ -1,7 +1,7 @@
 <template>
   <section class="px-5 mt-2 grid grid-cols-1 gap-y-1" id="nav-list">
     <!-- dashboard -->
-    <div id="dashboard" class=" nav-item">
+    <div @click="navigate('')" id="dashboard" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path fill="currentColor"
           d="M13.5 8.183V4.817q0-.357.234-.587t.58-.23h4.88q.347 0 .576.23t.23.587v3.366q0 .358-.234.587q-.234.23-.58.23h-4.88q-.346 0-.576-.23t-.23-.587M4 11.2V4.8q0-.34.234-.57t.58-.23h4.88q.347 0 .576.23t.23.57v6.4q0 .34-.234.57t-.58.23h-4.88q-.346 0-.576-.23T4 11.2m9.5 8v-6.4q0-.34.234-.57t.58-.23h4.88q.347 0 .576.23t.23.57v6.4q0 .34-.234.57t-.58.23h-4.88q-.346 0-.576-.23t-.23-.57M4 19.183v-3.366q0-.357.234-.587t.58-.23h4.88q.347 0 .576.23t.23.587v3.366q0 .358-.234.587q-.234.23-.58.23h-4.88q-.346 0-.576-.23T4 19.183M5 11h4.5V5H5zm9.5 8H19v-6h-4.5zm0-11H19V5h-4.5zM5 19h4.5v-3H5zm4.5-3" />
@@ -30,7 +30,7 @@
       <h2>{{ $t("navbar.orders") }}</h2>
     </div>
     <!-- customer -->
-    <div id="customer" class=" nav-item">
+    <div @click="navigate('customer')"  id="customer" class=" nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
         <path fill="none" stroke="currentColor"
           d="M10.8 14v-1.7a2 2 0 0 0-2-2H7.2a2 2 0 0 0-2 2V14m9.3-3.5V9.3a2 2 0 0 0-2-2H11m-9.5 3.2V9.3a2 2 0 0 1 2-2H5m4.605-.195a1.605 1.605 0 1 1-3.21 0a1.605 1.605 0 0 1 3.21 0Zm3.8-3a1.605 1.605 0 1 1-3.21 0a1.605 1.605 0 0 1 3.21 0Zm-7.5 0a1.605 1.605 0 1 1-3.21 0a1.605 1.605 0 0 1 3.21 0Z"
@@ -93,27 +93,32 @@
 </template>
 
 <script setup lang="ts">
+import { useNavigation } from '@/composables/useNavigate';
 import { addClassNameById } from '@/utils/useToggleClass';
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
 
+const {navigate} = useNavigation();
+const route = useRoute();
 //properties
 // add active based on router
 function addActiveLink() {
-  const path = useRouter().currentRoute.value.path;
+  const path = route.fullPath;
   const className = 'active-nav';
+  console.log(path);
 
-  switch(path){
-    case "/":
+
+  switch(true){
+    case path === "/dashboard":
       addClassNameById('dashboard', className);
       break;
-    case "/sell":
-      addClassNameById('dashboard', className);
+    case path === '/customer':
+      addClassNameById('customer', className);
       break;
   }
 }
 
-onMounted(()=>{
+watch(() => route.fullPath, () => {
   addActiveLink();
-})
+});
 </script>

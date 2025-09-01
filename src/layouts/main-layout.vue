@@ -5,10 +5,10 @@
       <div class="flex blue m-auto p-2 items-center justify-between shadow-sm  px-5">
         <div class="flex items-center gap-x-1" v-show="!closeMenubar">
           <commonAvatar />
-          <h1 class="text-xl blue">{{userName}}</h1>
+          <h1 class="text-xl blue">{{ userName }}</h1>
         </div>
-        <svg :class="{ 'm-auto': closeMenubar }" @click="closeMenubar = !closeMenubar" xmlns="http://www.w3.org/2000/svg"
-          class="size-5 cursor-pointer" viewBox="0 0 16 16">
+        <svg :class="{ 'm-auto': closeMenubar }" @click="closeMenubar = !closeMenubar"
+          xmlns="http://www.w3.org/2000/svg" class="size-5 cursor-pointer" viewBox="0 0 16 16">
           <path fill="currentColor"
             d="M10.315 5.032a2.11 2.11 0 0 0 2.064-1.678h1.833a.425.425 0 0 0 .3-.723a.43.43 0 0 0-.3-.124h-1.83a2.11 2.11 0 0 0-4.136 0H1.79a.424.424 0 0 0 0 .847h6.46a2.11 2.11 0 0 0 2.066 1.678m0-.88a1.23 1.23 0 1 1 0-2.46a1.23 1.23 0 0 1 0 2.46m-4.404 5.977A2.11 2.11 0 0 0 7.98 8.443l6.233-.007a.425.425 0 0 0 .3-.722a.43.43 0 0 0-.3-.124l-6.233.006a2.11 2.11 0 0 0-4.133 0L1.79 7.59a.423.423 0 0 0 0 .846l2.057.007a2.11 2.11 0 0 0 2.066 1.686m0-.88a1.23 1.23 0 1 1 0-2.46a1.23 1.23 0 0 1 0 2.46m4.398 5.938a2.11 2.11 0 0 0 2.068-1.694l1.833.026a.425.425 0 0 0 .3-.723a.43.43 0 0 0-.3-.124l-1.836-.027a2.11 2.11 0 0 0-4.13 0l-6.457.027a.424.424 0 0 0 0 .847l6.454-.026a2.11 2.11 0 0 0 2.068 1.694m0-.88a1.23 1.23 0 1 1 0-2.46a1.23 1.23 0 0 1 0 2.46"
             clip-rule="evenodd" />
@@ -20,10 +20,17 @@
         <slot name="sidebar"></slot>
       </aside>
     </nav>
+
     <main class="w-full h-screen overflow-auto ">
+      <div class="p-2 flex justify-end items-center gap-5 w-[96%] m-auto">
+        <div class="flex items-center">
+          <commonAvatar />
+          <h1 class=" text-xl">{{ getLocalStorage('name') }}</h1>
+        </div>
+      </div>
       <router-view v-slot="{ Component }">
         <transition name="slide" mode="out-in">
-          <component :is="Component" :key="$route.fullPath"/>
+          <component :is="Component" :key="$route.fullPath" />
         </transition>
       </router-view>
     </main>

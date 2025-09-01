@@ -67,7 +67,7 @@ async function login() {
     console.log(res.data);
 
     setCookie('access_token', res.data.accessToken, 3600) // 1h
-    setCookie('refresh_token', res.data.refreshToken, 604800) // 1h
+    setCookie('refresh_token', res.data.refreshToken, 604800) // 7d
     // store user info
     await getUserProfile();
     redirectByRole(res.data.is_admin);
@@ -81,7 +81,7 @@ async function login() {
 
 function redirectByRole(is_admin: boolean) {
   if(!is_admin){
-    location.href = '/user'
+    location.href = '/'
   }
 }
 async function getUserProfile() {
