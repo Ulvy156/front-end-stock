@@ -36,11 +36,11 @@ api.interceptors.response.use(
         )
 
         // save new tokens
-        setCookie("access_token", data.access_token, 900) // 15mn
-        setCookie("refresh_token", data.refresh_token, 604800) // 7 days
+        setCookie("access_token", data.accessToken, 900) // 15mn
+        setCookie("refresh_token", data.refreshToken, 604800) // 7 days
 
         // retry original request
-        originalRequest.headers.Authorization = `Bearer ${data.access_token}`
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
         return api(originalRequest)
       } catch (err) {
         // refresh failed → logout

@@ -3,10 +3,28 @@
     <nav :class="closeMenubar ? 'close-menu' : 'open-menu'" class="shadow-xl sticky z-10 left-0 top-0">
       <!-- side bar -->
       <div class="flex blue m-auto p-2 items-center justify-between shadow-sm  px-5">
-        <div class="flex items-center gap-x-1" v-show="!closeMenubar">
-          <commonAvatar />
-          <h1 class="text-xl blue">{{ userName }}</h1>
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" viewBox="0 0 48 48">
+          <path fill="#cfd8dc" d="M5 19h38v19H5z" />
+          <path fill="#b0bec5" d="M5 38h38v4H5z" />
+          <path fill="#455a64" d="M27 24h12v18H27z" />
+          <path fill="#e3f2fd" d="M9 24h14v11H9z" />
+          <path fill="#1e88e5" d="M10 25h12v9H10z" />
+          <path fill="#90a4ae" d="M36.5 33.5c-.3 0-.5.2-.5.5v2c0 .3.2.5.5.5s.5-.2.5-.5v-2c0-.3-.2-.5-.5-.5" />
+          <g fill="#558b2f">
+            <circle cx="24" cy="19" r="3" />
+            <circle cx="36" cy="19" r="3" />
+            <circle cx="12" cy="19" r="3" />
+          </g>
+          <path fill="#7cb342"
+            d="M40 6H8c-1.1 0-2 .9-2 2v3h36V8c0-1.1-.9-2-2-2m-19 5h6v8h-6zm16 0h-5l1 8h6zm-26 0h5l-1 8H9z" />
+          <g fill="#ffa000">
+            <circle cx="30" cy="19" r="3" />
+            <path d="M45 19c0 1.7-1.3 3-3 3s-3-1.3-3-3s1.3-3 3-3z" />
+            <circle cx="18" cy="19" r="3" />
+            <path d="M3 19c0 1.7 1.3 3 3 3s3-1.3 3-3s-1.3-3-3-3z" />
+          </g>
+          <path fill="#ffc107" d="M32 11h-5v8h6zm10 0h-5l2 8h6zm-26 0h5v8h-6zM6 11h5l-2 8H3z" />
+        </svg>
         <svg :class="{ 'm-auto': closeMenubar }" @click="closeMenubar = !closeMenubar"
           xmlns="http://www.w3.org/2000/svg" class="size-5 cursor-pointer" viewBox="0 0 16 16">
           <path fill="currentColor"
@@ -21,15 +39,16 @@
       </aside>
     </nav>
 
-    <main class="w-full h-screen overflow-auto ">
-      <div class="p-2 flex justify-end items-center gap-5 w-[96%] m-auto">
+    <main class="w-full m-auto h-screen overflow-auto ">
+      <div class="p-2 flex justify-between items-end gap-5 w-full m-auto">
+      <commonHeader :title="useNavigateTitleStore().title" class="text-black"/>
         <div class="flex items-center">
-          <commonAvatar />
           <h1 class=" text-xl">{{ getLocalStorage('name') }}</h1>
+          <commonAvatar />
         </div>
       </div>
       <router-view v-slot="{ Component }">
-        <transition name="slide" mode="out-in">
+        <transition name="fade" mode="out-in">
           <component :is="Component" :key="$route.fullPath" />
         </transition>
       </router-view>
@@ -41,11 +60,12 @@
 import { onMounted, ref } from 'vue';
 import commonAvatar from '@/components/common/common-avatar.vue';
 import { getLocalStorage } from '@/utils/useLocalStorage';
+import commonHeader from '@/components/common/common-header.vue';
+import { useNavigateTitleStore } from '../stores/navigateTitleStore';
 
 // properties
 const previousActiveIndex = ref(0);
 const closeMenubar = ref(false);
-const userName = getLocalStorage('name');
 
 //functions
 function onClickNavItem() {
@@ -123,31 +143,13 @@ onMounted(() => {
   color: white;
 }
 
-/* Slide from right to left */
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-  position: absolute;
-  width: 100%;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.1s ease-in-out;
 }
-
-.slide-enter-from {
-  transform: translateX(100%);
-  /* start from right */
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
-
-.slide-enter-to {
-  transform: translateX(0);
-  /* end at normal position */
-}
-
-.slide-leave-from {
-  transform: translateX(0);
-  /* start at normal */
-}
-
-.slide-leave-to {
-  transform: translateX(-100%);
-  /* exit to left */
+.fade-enter-to, .fade-leave-from {
+  opacity: 1;
 }
 </style>

@@ -35,7 +35,7 @@
             <label for="checkbox" >បង្ហាញពាក្យសម្ងាត់</label>
           </div>
       </div>
-      <commonButton title="ចូលប្រពន្ធ័"/>
+      <commonButton @click.prevent="login" title="ចូលប្រពន្ធ័"/>
     </section>
     <img
     class="w-1/2"
@@ -48,9 +48,9 @@ import iconEmail from '@/icons/icon-email.vue'
 import iconPassword from '@/icons/icon-password.vue'
 import inputField from '@/components/reusable/input-field.vue'
 import commonButton from '@/components/common/common-button.vue'
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { api } from '@/plugins/axios'
-import { setCookie } from '@/utils/useCookies'
+import { removeCookie, setCookie } from '@/utils/useCookies'
 import { setLocalStorage } from '@/utils/useLocalStorage'
 
 //properties
@@ -87,10 +87,14 @@ function redirectByRole(is_admin: boolean) {
 async function getUserProfile() {
   await api.get('/auth/profile')
   .then((res) => {
-    setCookie('user_id', res.data.id, 604800) // 1h
-    setCookie('is_admin', res.data.is_admin, 604800) // 1h
-
+    setLocalStorage('user_id', res.data.id);
+    setLocalStorage('role', res.data.role);
     setLocalStorage('name', res.data.name);
   })
 }
+
+onBeforeMount(()=>{
+  removeCookie('refresh_token')
+  removeCookie('access_token')
+})
 </script>

@@ -97,26 +97,31 @@ import { useNavigation } from '@/composables/useNavigate';
 import { addClassNameById } from '@/utils/useToggleClass';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useNavigateTitleStore } from '@/stores/navigateTitleStore';
+import { useI18n } from 'vue-i18n'
 
 const {navigate} = useNavigation();
 const route = useRoute();
+const { t } = useI18n();
+
 //properties
 // add active based on router
+const setTitle = (val: string) => useNavigateTitleStore().setNavigateTitle(val);
 function addActiveLink() {
   const path = route.fullPath;
   const className = 'active-nav';
-  console.log(path);
-
-
   switch(true){
     case path === "/dashboard":
+      setTitle(t('navbar.dashboard'));
       addClassNameById('dashboard', className);
       break;
     case path === '/customer':
+      setTitle(t('navbar.customers'));
       addClassNameById('customer', className);
       break;
   }
 }
+
 
 watch(() => route.fullPath, () => {
   addActiveLink();

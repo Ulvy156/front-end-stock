@@ -64,7 +64,9 @@ const transitionConfig = computed<DialogTransition>(() => {
   return `dialog-scale`
 })
 
-watch(()=>props.isVisible, ()=>{
+watch(
+  ()=>props.isVisible,
+  ()=>{
   if(!props.isVisible) return;
 
   dialogVisible.value = props.isVisible;

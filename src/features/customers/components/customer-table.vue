@@ -9,17 +9,24 @@
       <commonHeader :title='$t("customers.title")' />
     </div>
   </div>
-  <el-table :loading="isGetCustomers" :data="customers" stripe style="width: 100%">
-    <el-table-column prop="name" :label="$t('customers.name')" />
+  <el-table :loading="isGetCustomers" :data="customers" stripe style="width: 100%; min-width: 50%; height: 60vh;">
+    <el-table-column prop="name" :label="$t('customers.name')" >
+      <template #default="{ row }">
+          <div class="flex items-center gap-x-1">
+            <commonAvatar/>
+            <p>{{ row.name }}</p>
+          </div>
+      </template>
+    </el-table-column>
     <el-table-column prop="phone" :label="$t('customers.phone_number')" />
     <el-table-column prop="telegram" :label="$t('customers.telegram')" />
     <el-table-column prop="lastOrderDate" :label="$t('customers.lastOrderDate')" />
     <el-table-column fixed="right" :label="$t('operations.title')">
       <template #default="{ row }">
-        <el-button link type="warning" size="small" >
+        <el-button link type="warning" size="small">
           {{ $t("operations.details") }}
         </el-button>
-        <el-button link type="primary" size="small">
+        <el-button link type="primary" size="small" @click="onClickUpdate(row)">
           {{ $t("operations.edit") }}
         </el-button>
         <el-button link type="danger" size="small" @click="onClickDelete(row)">
@@ -28,10 +35,14 @@
       </template>
     </el-table-column>
   </el-table>
-  <component :is="dialogForm"
-  @onClose="isDelete = $event"
-  @onConfirm="onConfirmDelete"
-  :isVisible="isDelete">
+  <!-- pagination -->
+  <div class="flex justify-between items-center mt-5">
+    <p>{{ $t("current_data") }}: {{ customers.length }}</p>
+    <paginationPage :totalPage="totalPage" @page-change="currentPage = $event" />
+  </div>
+
+  <!-- pop-up delete  -->
+  <component :is="dialogForm" @onClose="isDelete = $event" @onConfirm="onConfirmDelete" :isVisible="isDelete">
     <template #header>
       {{ $t("modal_delete.title") }}
     </template>
@@ -39,21 +50,24 @@
       <p>{{ $t("customers.name") }} : {{ selectedCustomer.name }}</p>
     </template>
   </component>
+
+  <!-- update customer -->
+  <component :customer="selectedCustomer" @on-close="toggleUpdateCustomer = false" :isVisible="toggleUpdateCustomer"
+    :is="updateCustomer" />
+
 </template>
 
 <script setup lang="ts">
 import { api } from '@/plugins/axios';
-import { defineAsyncComponent, onBeforeMount, ref, shallowRef } from 'vue';
+import { defineAsyncComponent, onBeforeMount, ref, shallowRef, watch } from 'vue';
 import commonHeader from '@/components/common/common-header.vue';
+import commonAvatar from '@/components/common/common-avatar.vue';
 import { startLoading, stopLoading } from '@/composables/useLoading';
 import { notify } from '@/composables/useNotify';
 const dialogForm = defineAsyncComponent(() => import("@/components/reusable/dialog-form.vue"))
-
-//interface
-interface Customer {
-  id: string;
-  name: string;
-}
+const updateCustomer = defineAsyncComponent(() => import("./update-customer.vue"));
+import paginationPage from '@/components/reusable/pagination-page.vue';
+import type { Customer } from '../interface/customer.interface';
 
 // properties
 const customers = shallowRef([]);
@@ -61,14 +75,30 @@ const isGetCustomers = ref(false);
 const isDelete = ref(false)
 const selectedCustomer = ref<Customer>({
   id: '',
-  name: ''
+  name: '',
+  phone: '',
+  telegram: '',
+  address: '',
+  lastOrderDate: null,
+  totalOrders: 0,
+  totalSpent: 0,
+  mapUrl: '',
+  createdAt: '',
+  updatedAt: ''
 });
+const totalPage = ref(0);
+const currentPage = ref(1);
+const toggleUpdateCustomer = ref(false);
 
 //functions
 async function getCustomers() {
-  await api.get("/customers")
+  const meta = { page: currentPage.value };
+  await api.get("/customers", {
+    params: meta
+  })
     .then((res) => {
-      customers.value = res.data.data;
+      customers.value = res.data.data.customers;
+      totalPage.value = res.data.data.total;
     })
     .finally(() => {
       isGetCustomers.value = true;
@@ -78,23 +108,34 @@ function onClickDelete(customer: Customer) {
   isDelete.value = true;
   selectedCustomer.value = customer;
 }
+function onClickUpdate(customer: Customer) {
+  toggleUpdateCustomer.value = true;
+  selectedCustomer.value = customer;
+}
 async function onConfirmDelete() {
-  console.log("start");
   startLoading();
 
   await api.delete(`/customers/${selectedCustomer.value.id}`)
-  .then(()=>{
-    notify({ message: "Customer deleted successfully", type: "success" });
-  })
-  .catch((err)=>{
-    console.log(err);
+    .then(async () => {
+      await getCustomers();
 
-    notify({ message: "Customer deleted failed", type: "error" });
-  })
-  .finally(()=>{
-    stopLoading();
-  })
+      notify({ message: "Customer deleted successfully", type: "success" });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      notify({ message: "Customer deleted failed", type: "error" });
+    })
+    .finally(() => {
+      isDelete.value = false;
+      stopLoading();
+    })
 }
+
+// watch
+watch(currentPage, async () => {
+  await getCustomers();
+})
 
 onBeforeMount(async () => {
   await getCustomers();

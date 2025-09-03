@@ -9,7 +9,7 @@ export default [
         component: () => import("@/views/user/home-view.vue")
       },
       {
-        path: '/customer',
+        path: 'customer',
         component: () => import("@/views/auth/customer-view.vue"),
         meta: { requiresAuth: true }
       }
