@@ -41,10 +41,22 @@
 
     <main class="w-full m-auto h-screen overflow-auto ">
       <div class="p-2 flex justify-between items-end gap-5 w-full m-auto">
-      <commonHeader :title="useNavigateTitleStore().title" class="text-black"/>
+        <commonHeader :title="useNavigateTitleStore().title" class="text-[var(--text-gray)]" />
         <div class="flex items-center gap-x-2">
-          <h1 class=" text-xl">{{ getLocalStorage('name') }}</h1>
-          <commonAvatar :src="user_image" />
+        <commonHeader :title="getLocalStorage('name') ?? ''" class="text-[var(--text-gray)]" />
+          <el-dropdown placement="bottom-end">
+            <commonAvatar class="cursor-pointer" :src="user_image" />
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="logout">
+                  Logout
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  Profile
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
       <router-view v-slot="{ Component }">
@@ -63,6 +75,7 @@ import { getLocalStorage } from '@/utils/useLocalStorage';
 import commonHeader from '@/components/common/common-header.vue';
 import { useNavigateTitleStore } from '../stores/navigateTitleStore';
 import { api } from '@/plugins/axios';
+import { removeCookie } from '@/utils/useCookies';
 
 // properties
 const previousActiveIndex = ref(0);
@@ -97,11 +110,17 @@ function removeActiveClass(list: HTMLCollection) {
 
 async function getUserProfile() {
   await api.get('/auth/profile')
-  .then((res) => {
-    user_image.value = res.data.img_url;
-    console.log(res);
+    .then((res) => {
+      user_image.value = res.data.img_url;
+      console.log(res);
 
-  })
+    })
+}
+
+function logout() {
+  removeCookie('refresh_token');
+  removeCookie('access_token');
+  location.href = '/login';
 }
 
 onMounted(() => {
@@ -149,21 +168,34 @@ onBeforeMount(async () => {
   color: white;
 }
 
-.active-nav {
+/* .active-nav {
   background: #155dfc;
   padding: 10px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   color: white;
+} */
+.active-nav {
+  background: #155dfc;
+  padding: 10px 18px; /* a bit more horizontal padding */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  color: white;
+  border-radius: 8px; /* smooth rounded corners */
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.1s ease-in-out;
 }
-.fade-enter-from, .fade-leave-to {
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
-.fade-enter-to, .fade-leave-from {
+
+.fade-enter-to,
+.fade-leave-from {
   opacity: 1;
 }
 </style>

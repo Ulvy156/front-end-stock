@@ -16,7 +16,6 @@
   },
   "total_revenue":"ប្រាក់ចំណូលសរុប",
   "total_expense":"ការចំណាយសរុប",
-  "total_customer":"ចំនួនអតិថិជនសរុប",
   "total_order":"ចំនួនការកម្មង់",
   "imports":{
     "goods":"ទំនិញដែលនាំចូល",
@@ -44,7 +43,11 @@
     "lastOrderDate":"កាលបរិច្ឆេទទិញលើកចុងក្រោយ",
     "totalOrders":"ការបញ្ជាទិញសរុប",
     "totalSpent":"ចំណាយសរុប",
-    "update_customer":"ធ្វើបច្ចុប្បន្នភាពព័ត៌មានអតិថិជន"
+    "update_customer":"ធ្វើបច្ចុប្បន្នភាពព័ត៌មានអតិថិជន",
+    "total_customer":"ចំនួនអតិថិជនសរុប",
+    "total_customer_vip":"ចំនួនអតិថិជនសរុប (VIP)",
+    "active_total_customer":"ចំនួនអតិថិជនសកម្មសរុប",
+    "inactive_total_customer":"ចំនួនអតិថិជនអសកម្មសរុប"
   },
   "operations":{
     "title":"ប្រតិបត្តិការ",
