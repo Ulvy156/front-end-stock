@@ -42,9 +42,9 @@
     <main class="w-full m-auto h-screen overflow-auto ">
       <div class="p-2 flex justify-between items-end gap-5 w-full m-auto">
       <commonHeader :title="useNavigateTitleStore().title" class="text-black"/>
-        <div class="flex items-center">
+        <div class="flex items-center gap-x-2">
           <h1 class=" text-xl">{{ getLocalStorage('name') }}</h1>
-          <commonAvatar />
+          <commonAvatar :src="user_image" />
         </div>
       </div>
       <router-view v-slot="{ Component }">
@@ -57,16 +57,17 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import commonAvatar from '@/components/common/common-avatar.vue';
 import { getLocalStorage } from '@/utils/useLocalStorage';
 import commonHeader from '@/components/common/common-header.vue';
 import { useNavigateTitleStore } from '../stores/navigateTitleStore';
+import { api } from '@/plugins/axios';
 
 // properties
 const previousActiveIndex = ref(0);
 const closeMenubar = ref(false);
-
+const user_image = ref();
 //functions
 function onClickNavItem() {
   const navList = document.getElementById('nav-list')?.children;
@@ -94,8 +95,21 @@ function removeActiveClass(list: HTMLCollection) {
   )
 }
 
+async function getUserProfile() {
+  await api.get('/auth/profile')
+  .then((res) => {
+    user_image.value = res.data.img_url;
+    console.log(res);
+
+  })
+}
+
 onMounted(() => {
   onClickNavItem();
+});
+
+onBeforeMount(async () => {
+  getUserProfile();
 })
 
 </script>

@@ -77,6 +77,9 @@ function onClose() {
   emits('on-close')
   drawerVisible.value = false;
 }
+async function onUpdateCustomer() {
+  
+}
 
 
 watch(
