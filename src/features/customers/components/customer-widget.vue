@@ -1,6 +1,6 @@
 <template>
   <article class="flex flex-col items-center p-5 w-full hover:shadow-sm transition-shadow duration-300 cursor-pointer rounded-md">
-    <h3>{{ title }}</h3>
+    <h3 class="text-lg">{{ title }}</h3>
     <h1 class="text-2xl">{{total}} </h1>
   </article>
 </template>

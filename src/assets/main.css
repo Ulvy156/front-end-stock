@@ -24,3 +24,17 @@ body {
 .green{
   color: var(--green);
 }
+
+
+#nprogress .bar {
+  background: #155dfc !important; /* matches your dashboard blue */
+  height: 2px !important;         /* thin and modern */
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #155dfc, 0 0 5px #155dfc !important;
+}
+
+#nprogress .spinner {
+  display: none !important;
+}

@@ -7,7 +7,7 @@
       <customerWidget class="bg-red-50 text-red-800" :title="$t('customers.inactive_total_customer')" :total="totalCustomers" />
     </div>
 
-    <el-table :loading="isGetCustomers" :data="customers" stripe style="width: 100%; min-width: 50%; height: 60vh;">
+    <el-table :highlight-current-row="true" :loading="isGetCustomers" :data="customers" stripe style="width: 100%; min-width: 50%; height: 60vh;">
       <el-table-column prop="name" :label="$t('customers.name')">
         <template #default="{ row }">
           <div class="flex items-center gap-x-1">
@@ -23,15 +23,15 @@
         </template>
       </el-table-column>
       <el-table-column prop="lastOrderDate" :label="$t('customers.lastOrderDate')" />
-      <el-table-column fixed="right" :label="$t('operations.title')" min-width="120">
+      <el-table-column fixed="right" :label="$t('operations.title')" min-width="100">
         <template #default="{ row }">
-          <el-button plain type="warning" size="small">
+          <el-button link type="warning" size="small">
             {{ $t("operations.details") }}
           </el-button>
-          <el-button plain type="primary" size="small" @click="onClickUpdate(row)">
+          <el-button link type="primary" size="small" @click="onClickUpdate(row)">
             {{ $t("operations.edit") }}
           </el-button>
-          <el-button plain type="danger" size="small" @click="onClickDelete(row)">
+          <el-button link type="danger" size="small" @click="onClickDelete(row)">
             {{ $t("operations.delete") }}
           </el-button>
         </template>
