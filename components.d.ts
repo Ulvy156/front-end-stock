@@ -12,6 +12,8 @@ declare module 'vue' {
     CommonAvatar: typeof import('./src/components/common/common-avatar.vue')['default']
     CommonButton: typeof import('./src/components/common/common-button.vue')['default']
     CommonHeader: typeof import('./src/components/common/common-header.vue')['default']
+    CustomeWidget: typeof import('./src/components/reusable/custome-widget.vue')['default']
+    CustomWidget: typeof import('./src/components/reusable/custom-widget.vue')['default']
     'Dialog.form': typeof import('./src/components/reusable/dialog.form.vue')['default']
     DialogForm: typeof import('./src/components/reusable/dialog-form.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -32,6 +34,8 @@ declare module 'vue' {
     PaginationPage: typeof import('./src/components/reusable/pagination-page.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StatsWidget: typeof import('./src/components/reusable/stats-widget.vue')['default']
+    TextArea: typeof import('./src/components/reusable/text-area.vue')['default']
     UserHome: typeof import('./src/components/user/user-home.vue')['default']
     UserNavbar: typeof import('./src/components/navbar/user-navbar.vue')['default']
   }

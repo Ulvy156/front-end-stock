@@ -64,10 +64,9 @@ const isShowPassword = ref(false);
 async function login() {
   await api.post('/auth/login', loginData.value)
   .then(async (res) => {
-    console.log(res.data);
 
-    setCookie('access_token', res.data.accessToken, 3600) // 1h
-    setCookie('refresh_token', res.data.refreshToken, 604800) // 7d
+    setCookie('access_token', res.data.accessToken, Number(import.meta.env.VITE_JWT_EXPIRES_IN)) // 1h
+    setCookie('refresh_token', res.data.refreshToken, Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN)) // 7d
     // store user info
     await getUserProfile();
     redirectByRole(res.data.is_admin);

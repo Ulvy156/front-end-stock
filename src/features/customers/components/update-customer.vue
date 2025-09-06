@@ -1,10 +1,13 @@
 <template>
-  <el-drawer :before-close="onClose" size="40%" v-model="drawerVisible">
-
-    <section class="grid grid-cols-2 gap-3">
+  <el-drawer :with-header="false" :before-close="onClose" size="35%" v-model="drawerVisible">
+    <section class="flex flex-col gap-3">
       <div class="flex items-center gap-x-1 col-span-2">
         <iconEdit class="size-7 text-blue-500" />
         <commonHeader :title="$t('customers.update_customer')" />
+      </div>
+      <div class="flex flex-col items-center">
+        <img class="w-1/3 m-auto rounded-md" :src="updateCustomer.img_url" alt="" />
+        <input class="bg-blue-50 h-fit w-fit p-1 rounded-md" type="file" @change="handleFile" />
       </div>
       <div>
         <label for="name">{{ $t('customers.name') }}</label>
@@ -20,80 +23,132 @@
       </div>
       <div>
         <label for="address">{{ $t('customers.address') }}</label>
-        <inputField v-model="updateCustomer.address" :size="inputSize" id="address" />
+        <textArea v-model="updateCustomer.address" id="address" :maxlength="150" />
       </div>
       <div>
         <label for="mapUrl">{{ $t('customers.mapUrl') }}</label>
-        <inputField v-model="updateCustomer.address" :size="inputSize" id="mapUrl" />
+        <textArea v-model="updateCustomer.mapUrl" :size="inputSize" id="mapUrl" :maxlength="300" />
       </div>
       <div class="flex justify-end items-end">
-        <commonButton @click="onClose" size="large" type="info" :title="$t('modal_delete.cancel')" />
-        <commonButton size="large" type="primary" :title="$t('modal_delete.confirm')" />
+        <commonButton
+          @click="onClose"
+          size="large"
+          type="info"
+          :title="$t('modal_delete.cancel')"
+        />
+        <commonButton
+          @click="onUpdateCustomer"
+          size="large"
+          type="primary"
+          :title="$t('modal_delete.confirm')"
+        />
       </div>
     </section>
-
   </el-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import commonHeader from '@/components/common/common-header.vue';
-import iconEdit from '@/icons/icon-edit.vue';
-import inputField from '@/components/reusable/input-field.vue';
-import commonButton from '@/components/common/common-button.vue';
-import type { Customer } from '../interface/customer.interface';
+import { ref, watch } from 'vue'
+import commonHeader from '@/components/common/common-header.vue'
+import iconEdit from '@/icons/icon-edit.vue'
+import inputField from '@/components/reusable/input-field.vue'
+import commonButton from '@/components/common/common-button.vue'
+import type { Customer } from '../interface/customer.interface'
+import textArea from '@/components/reusable/text-area.vue'
+import { api } from '@/plugins/axios'
+import { notify } from '@/composables/useNotify'
+import { startLoading, stopLoading } from '@/composables/useLoading'
+import { getLocalStorage } from '@/utils/useLocalStorage'
 const props = withDefaults(
   defineProps<{
-    isVisible: boolean,
+    isVisible: boolean
     customer: Customer
   }>(),
   {
     isVisible: false,
-    customer: () => ({} as Customer)
-  }
+    customer: () => ({}) as Customer,
+  },
 )
 
 const emits = defineEmits<{
   (event: 'on-close'): void
-}>();
-const drawerVisible = ref(false);
-const inputSize = 'large';
-const updateCustomer = ref<Customer>({
+  (event: 'on-updated'): void
+}>()
+const drawerVisible = ref(false)
+const inputSize = 'large'
+const updateCustomer = ref({
   id: '',
   name: '',
   phone: '',
   telegram: '',
   address: '',
-  lastOrderDate: null,
-  totalOrders: 0,
-  totalSpent: 0,
   mapUrl: '',
-  createdAt: '',
-  updatedAt: ''
-});
+  img_url: '',
+})
+const selectedFile = ref()
 
 //methods
 function onClose() {
   emits('on-close')
-  drawerVisible.value = false;
+  drawerVisible.value = false
+}
+function onUpdated() {
+  emits('on-updated')
+  drawerVisible.value = false
+}
+function handleFile(e: Event) {
+  const target = e.target as HTMLInputElement
+  if (target.files && target.files.length > 0) {
+    selectedFile.value = target.files[0] // store selected file
+    updateCustomer.value.img_url = URL.createObjectURL(target.files[0])
+  }
 }
 async function onUpdateCustomer() {
-  
-}
+  const formData = appendDataToForm()
+  startLoading()
+  appendDataToForm()
+  await api
+    .patch(`/customers/${updateCustomer.value.id}`, formData)
+    .then(() => {
+      onUpdated()
+      notify({ message: 'Customer updated successfully', type: 'success' })
+    })
+    .catch((err) => {
+      console.log(err)
 
+      notify({ message: err.response.data.message[0], type: 'error' })
+    })
+    .finally(() => {
+      stopLoading()
+    })
+}
+function appendDataToForm() {
+  const formData = new FormData()
+  formData.append('name', updateCustomer.value.name)
+  formData.append('phone', updateCustomer.value.phone)
+  formData.append('telegram', updateCustomer.value.telegram)
+  formData.append('address', updateCustomer.value.address)
+  formData.append('mapUrl', updateCustomer.value.mapUrl)
+  formData.append('updated_by_user_id', getLocalStorage('user_id') ?? '')
+
+  if(selectedFile.value){
+    formData.append('file', selectedFile.value)
+  }
+  return formData;
+}
 
 watch(
   () => props.customer,
   () => {
-    updateCustomer.value = props.customer;
-  }
+    updateCustomer.value = props.customer
+  },
 )
 watch(
   () => props.isVisible,
   () => {
-    if (!props.isVisible) return;
+    if (!props.isVisible) return
 
-    drawerVisible.value = props.isVisible;
-  }
+    drawerVisible.value = props.isVisible
+  },
 )
 </script>

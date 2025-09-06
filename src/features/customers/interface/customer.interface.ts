@@ -8,6 +8,14 @@ export interface Customer {
   totalOrders: number
   totalSpent: number
   mapUrl: string
+  img_url: string
   createdAt: string
   updatedAt: string
+}
+
+export interface CustomerFilter {
+  page: number;
+  limit: number;
+  name: string;
+  phone_number: string;
 }

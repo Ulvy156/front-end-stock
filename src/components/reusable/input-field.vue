@@ -5,6 +5,8 @@
   :suffix-icon="icon"
   :size
   :type
+  :clearable
+  :disabled
   />
 </template>
 
@@ -15,7 +17,9 @@ interface Input {
   placeholder: string,
   icon: unknown | null,
   size: 'large' | 'default' | 'small',
-  type: string
+  type: string,
+  disabled: boolean,
+  clearable: boolean
 
 }
 
@@ -25,7 +29,9 @@ withDefaults(
     placeholder: "Please input...",
     icon: undefined,
     size: 'default',
-    type: 'text'
+    type: 'text',
+    disabled: false,
+    clearable: true
   }
 )
 </script>

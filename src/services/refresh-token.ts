@@ -11,6 +11,8 @@ export default async function refreshToken() {
       }
     }
   )
+  console.log(data);
+
   setCookie("access_token", data.accessToken, 900) // 15mn
   setCookie("refresh_token", data.refreshToken, 604800) // 7 days
 }
