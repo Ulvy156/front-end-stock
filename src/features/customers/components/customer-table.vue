@@ -62,22 +62,21 @@
   <component
     :customer="selectedCustomer"
     @on-close="toggleUpdateCustomer = false"
-    @on-updated="getCustomers"
+    @on-updated="getAllCustomers"
     :isVisible="toggleUpdateCustomer"
     :is="updateCustomer"
   />
 </template>
 
 <script setup lang="ts">
-import { api } from '@/plugins/axios'
 import { defineAsyncComponent, onBeforeMount, ref, shallowRef, watch } from 'vue'
 import commonAvatar from '@/components/common/common-avatar.vue'
 import paginationPage from '@/components/reusable/pagination-page.vue'
-import { startLoading, stopLoading } from '@/composables/useLoading'
-import { notify } from '@/composables/useNotify'
+import { startLoading } from '@/composables/useLoading'
 const dialogForm = defineAsyncComponent(() => import('@/components/reusable/dialog-form.vue'))
 const updateCustomer = defineAsyncComponent(() => import('../components/update-customer.vue'))
 import type { Customer, CustomerFilter } from '../interface/customer.interface'
+import { deleteCustomer, getCustomers } from '@/services/customerService'
 
 //props
 const props = defineProps<{
@@ -113,21 +112,16 @@ const customerFilterData = ref<CustomerFilter>({
   phone_number: ''
 })
 //functions
-async function getCustomers() {
-  await api
-    .get('/customers', {
-      params: customerFilterData.value
-    })
-    .then((res) => {
-      customers.value = res.data.data.customers
-      totalPage.value = res.data.data.total
-      totalCustomers.value = res.data.data.total
-    })
-    .finally(() => {
-      isGetCustomers.value = true
-      // make update form reactive
-      toggleUpdateCustomer.value = false
-    })
+async function getAllCustomers() {
+
+  const data = await getCustomers(customerFilterData.value);
+  customers.value = data?.customers ?? [];
+  totalPage.value = data?.total ?? 0;
+  totalCustomers.value = data?.customers?.length ?? 0;
+
+  isGetCustomers.value = true
+  // make update form reactive
+  toggleUpdateCustomer.value = false
 }
 function onClickDelete(customer: Customer) {
   isDelete.value = true
@@ -140,40 +134,24 @@ function onClickUpdate(customer: Customer) {
 async function onConfirmDelete() {
   startLoading()
 
-  await api
-    .delete(`/customers/${selectedCustomer.id}`)
-    .then(async () => {
-      await getCustomers()
-
-      notify({ message: 'Customer deleted successfully', type: 'success' })
-    })
-    .catch((err) => {
-      console.error(err)
-
-      notify({ message: 'Customer deleted failed', type: 'error' })
-    })
-    .finally(() => {
-      isDelete.value = false
-      stopLoading()
-    })
+  await deleteCustomer(selectedCustomer.id, getAllCustomers);
+  isDelete.value = false;
 }
 
 // watch
 watch(currentPage, async () => {
-  await getCustomers()
+  await getAllCustomers()
 })
 
 watch(
   () => props,
   () => {
     customerFilterData.value = props.filterData;
-    console.log(props.filterData);
-
   }
 )
 
 onBeforeMount(async () => {
-  await getCustomers()
+  await getAllCustomers()
 })
 </script>
 

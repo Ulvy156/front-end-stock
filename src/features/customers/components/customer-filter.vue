@@ -44,8 +44,6 @@ const filterData = ref<CustomerFilter>({
 })
 
 function onSearch() {
-  console.log(filterData.value);
-
   emit('on-search', filterData.value)
 }
 </script>

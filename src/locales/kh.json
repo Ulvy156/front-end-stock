@@ -51,7 +51,10 @@
     "total_customer":"ចំនួនអតិថិជនសរុប",
     "total_customer_vip":"ចំនួនអតិថិជនសរុប (VIP)",
     "active_total_customer":"ចំនួនអតិថិជនសកម្មសរុប",
-    "inactive_total_customer":"ចំនួនអតិថិជនអសកម្មសរុប"
+    "inactive_total_customer":"ចំនួនអតិថិជនអសកម្មសរុប",
+    "created":"អតិថិជនបានបង្កើតដោយជោគជ័យ",
+    "deleted":"អតិថិជនបានលុបដោយជោគជ័យ",
+    "updated":"អតិថិជនបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ"
   },
   "operations":{
     "title":"ប្រតិបត្តិការ",

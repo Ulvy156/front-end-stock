@@ -6,28 +6,28 @@
         <commonHeader :title="$t('customers.update_customer')" />
       </div>
       <div class="flex flex-col items-center">
-        <img class="w-1/3 m-auto rounded-md" :src="updateCustomer.img_url" alt="" />
+        <img class="w-1/3 m-auto rounded-md" :src="customerData.img_url" alt="" />
         <input class="bg-blue-50 h-fit w-fit p-1 rounded-md" type="file" @change="handleFile" />
       </div>
       <div>
         <label for="name">{{ $t('customers.name') }}</label>
-        <inputField v-model="updateCustomer.name" :size="inputSize" id="name" />
+        <inputField v-model="customerData.name" :size="inputSize" id="name" />
       </div>
       <div>
         <label for="phone">{{ $t('customers.phone_number') }}</label>
-        <inputField v-model="updateCustomer.phone" :size="inputSize" id="phone" />
+        <inputField v-model="customerData.phone" :size="inputSize" id="phone" />
       </div>
       <div>
         <label for="telegram">{{ $t('customers.telegram') }}</label>
-        <inputField v-model="updateCustomer.telegram" :size="inputSize" id="telegram" />
+        <inputField v-model="customerData.telegram" :size="inputSize" id="telegram" />
       </div>
       <div>
         <label for="address">{{ $t('customers.address') }}</label>
-        <textArea v-model="updateCustomer.address" id="address" :maxlength="150" />
+        <textArea v-model="customerData.address" id="address" :maxlength="150" />
       </div>
       <div>
         <label for="mapUrl">{{ $t('customers.mapUrl') }}</label>
-        <textArea v-model="updateCustomer.mapUrl" :size="inputSize" id="mapUrl" :maxlength="300" />
+        <textArea v-model="customerData.mapUrl" :size="inputSize" id="mapUrl" :maxlength="300" />
       </div>
       <div class="flex justify-end items-end">
         <commonButton
@@ -55,10 +55,10 @@ import inputField from '@/components/reusable/input-field.vue'
 import commonButton from '@/components/common/common-button.vue'
 import type { Customer } from '../interface/customer.interface'
 import textArea from '@/components/reusable/text-area.vue'
-import { api } from '@/plugins/axios'
-import { notify } from '@/composables/useNotify'
-import { startLoading, stopLoading } from '@/composables/useLoading'
+import { startLoading } from '@/composables/useLoading'
 import { getLocalStorage } from '@/utils/useLocalStorage'
+import { updateCustomer } from '@/services/customerService'
+
 const props = withDefaults(
   defineProps<{
     isVisible: boolean
@@ -76,7 +76,7 @@ const emits = defineEmits<{
 }>()
 const drawerVisible = ref(false)
 const inputSize = 'large'
-const updateCustomer = ref({
+const customerData = ref({
   id: '',
   name: '',
   phone: '',
@@ -100,35 +100,22 @@ function handleFile(e: Event) {
   const target = e.target as HTMLInputElement
   if (target.files && target.files.length > 0) {
     selectedFile.value = target.files[0] // store selected file
-    updateCustomer.value.img_url = URL.createObjectURL(target.files[0])
+    customerData.value.img_url = URL.createObjectURL(target.files[0])
   }
 }
 async function onUpdateCustomer() {
   const formData = appendDataToForm()
   startLoading()
   appendDataToForm()
-  await api
-    .patch(`/customers/${updateCustomer.value.id}`, formData)
-    .then(() => {
-      onUpdated()
-      notify({ message: 'Customer updated successfully', type: 'success' })
-    })
-    .catch((err) => {
-      console.log(err)
-
-      notify({ message: err.response.data.message[0], type: 'error' })
-    })
-    .finally(() => {
-      stopLoading()
-    })
+  await updateCustomer(customerData.value.id, formData, onUpdated);
 }
 function appendDataToForm() {
   const formData = new FormData()
-  formData.append('name', updateCustomer.value.name)
-  formData.append('phone', updateCustomer.value.phone)
-  formData.append('telegram', updateCustomer.value.telegram)
-  formData.append('address', updateCustomer.value.address)
-  formData.append('mapUrl', updateCustomer.value.mapUrl)
+  formData.append('name', customerData.value.name)
+  formData.append('phone', customerData.value.phone)
+  formData.append('telegram', customerData.value.telegram)
+  formData.append('address', customerData.value.address)
+  formData.append('mapUrl', customerData.value.mapUrl)
   formData.append('updated_by_user_id', getLocalStorage('user_id') ?? '')
 
   if(selectedFile.value){
@@ -140,7 +127,7 @@ function appendDataToForm() {
 watch(
   () => props.customer,
   () => {
-    updateCustomer.value = props.customer
+    customerData.value = props.customer
   },
 )
 watch(
