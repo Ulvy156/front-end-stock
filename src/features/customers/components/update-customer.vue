@@ -57,7 +57,7 @@ import type { Customer } from '../interface/customer.interface'
 import textArea from '@/components/reusable/text-area.vue'
 import { startLoading } from '@/composables/useLoading'
 import { getLocalStorage } from '@/utils/useLocalStorage'
-import { updateCustomer } from '@/services/customerService'
+import { updateCustomer } from '@/services/customer-service'
 
 const props = withDefaults(
   defineProps<{

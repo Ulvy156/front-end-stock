@@ -76,7 +76,7 @@ import { startLoading } from '@/composables/useLoading'
 const dialogForm = defineAsyncComponent(() => import('@/components/reusable/dialog-form.vue'))
 const updateCustomer = defineAsyncComponent(() => import('../components/update-customer.vue'))
 import type { Customer, CustomerFilter } from '../interface/customer.interface'
-import { deleteCustomer, getCustomers } from '@/services/customerService'
+import { deleteCustomer, getCustomers } from '@/services/customer-service'
 
 //props
 const props = defineProps<{
@@ -119,8 +119,8 @@ async function getAllCustomers() {
   totalPage.value = data?.total ?? 0;
   totalCustomers.value = data?.customers?.length ?? 0;
 
-  isGetCustomers.value = true
   // make update form reactive
+  isGetCustomers.value = true
   toggleUpdateCustomer.value = false
 }
 function onClickDelete(customer: Customer) {
