@@ -40,6 +40,8 @@
     <img
     class="w-1/2"
     src="../../assets//undraw_access-account_aydp.svg" alt="login-image" >
+
+    <button type="submit" style="display: none"></button>
   </form>
 </template>
 

@@ -1,8 +1,7 @@
 <template>
   <el-table
-    @row-click="onClickUpdate"
     :highlight-current-row="true"
-    :loading="isGetCustomers"
+    v-loading="loadingCustomers"
     :data="customers"
     stripe
     style="width: 100%; min-width: 50%; max-height: 55vh; height: auto"
@@ -15,13 +14,17 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="address" :label="$t('customers.address')" />
+    <el-table-column :label="$t('customers.address')" >
+      <template #default="{ row }">
+        {{ row.district.province.name }} / {{ row.district.name }}
+      </template>
+    </el-table-column>
     <el-table-column prop="phone" :label="$t('customers.phone_number')" />
     <el-table-column :label="$t('customers.telegram')">
       <template #default="{ row }">
-        <el-link :href="`tg://resolve?phone=${row.telegram}`" target="_blank" type="primary">{{
-          row.telegram
-        }}</el-link>
+        <el-link :href="`tg://resolve?phone=${row.telegram}`" target="_blank" type="primary">
+          {{formatPhoneDisplay(row.telegram)}}
+        </el-link>
       </template>
     </el-table-column>
     <el-table-column fixed="right" :label="$t('operations.title')" min-width="100">
@@ -41,7 +44,7 @@
   <!-- pagination -->
   <div class="flex justify-between items-center mt-5">
     <p>{{ $t('current_data') }}: {{ customers.length }}</p>
-    <paginationPage :totalPage="totalPage" @page-change="currentPage = $event" />
+    <paginationPage :totalPage="totalPage" @page-change="currentFilterData.page = $event" />
   </div>
   <!-- pop-up delete  -->
   <component
@@ -60,10 +63,10 @@
 
   <!-- update customer -->
   <component
+    :isVisible="toggleUpdateCustomer"
     :customer="selectedCustomer"
     @on-close="toggleUpdateCustomer = false"
-    @on-updated="getAllCustomers"
-    :isVisible="toggleUpdateCustomer"
+    @on-updated="hideUpdatedForm"
     :is="updateCustomer"
   />
 </template>
@@ -77,6 +80,7 @@ const dialogForm = defineAsyncComponent(() => import('@/components/reusable/dial
 const updateCustomer = defineAsyncComponent(() => import('../components/update-customer.vue'))
 import type { Customer, CustomerFilter } from '../interface/customer.interface'
 import { deleteCustomer, getCustomers } from '@/services/customer-service'
+import { formatPhoneDisplay } from '@/utils/formatPhoneDisplay'
 
 //props
 const props = defineProps<{
@@ -85,10 +89,10 @@ const props = defineProps<{
 
 // properties
 const customers = shallowRef<Customer[]>([])
-const isGetCustomers = ref(false)
+const loadingCustomers = ref(false);
 const totalCustomers = ref(0)
 const isDelete = ref(false)
-let selectedCustomer: Customer = {
+const selectedCustomer = shallowRef<Customer>({
   id: '',
   name: '',
   phone: '',
@@ -98,55 +102,58 @@ let selectedCustomer: Customer = {
   totalOrders: 0,
   totalSpent: 0,
   mapUrl: '',
-  createdAt: '',
-  updatedAt: '',
   img_url: '',
-}
+  createdAt: '',
+  updatedAt: ''
+})
 const totalPage = ref(0)
-const currentPage = ref(1)
 const toggleUpdateCustomer = ref(false)
-const customerFilterData = ref<CustomerFilter>({
+const currentFilterData = shallowRef<CustomerFilter>({
   page: 1,
-  limit: 20,
+  limit: 30,
   name: '',
   phone_number: ''
 })
-//functions
-async function getAllCustomers() {
 
-  const data = await getCustomers(customerFilterData.value);
+//functions
+async function hideUpdatedForm() {
+  toggleUpdateCustomer.value = false;
+  await getAllCustomers();
+}
+async function getAllCustomers() {
+  loadingCustomers.value = true;
+  const data = await getCustomers(currentFilterData.value);
   customers.value = data?.customers ?? [];
-  totalPage.value = data?.total ?? 0;
+  totalPage.value = data?.lastPage ?? 0;
   totalCustomers.value = data?.customers?.length ?? 0;
 
-  // make update form reactive
-  isGetCustomers.value = true
-  toggleUpdateCustomer.value = false
+  loadingCustomers.value = false;
 }
+
 function onClickDelete(customer: Customer) {
   isDelete.value = true
-  selectedCustomer = customer
+
+  selectedCustomer.value = JSON.parse(JSON.stringify(customer))
 }
+
 function onClickUpdate(customer: Customer) {
+  selectedCustomer.value = JSON.parse(JSON.stringify(customer));
   toggleUpdateCustomer.value = true
-  selectedCustomer = { ...customer }
 }
+
 async function onConfirmDelete() {
   startLoading()
 
-  await deleteCustomer(selectedCustomer.id, getAllCustomers);
+  await deleteCustomer(selectedCustomer.value.id, getAllCustomers);
   isDelete.value = false;
 }
 
 // watch
-watch(currentPage, async () => {
-  await getAllCustomers()
-})
-
 watch(
-  () => props,
-  () => {
-    customerFilterData.value = props.filterData;
+  () => props.filterData,
+  async () => {
+    currentFilterData.value = props.filterData;
+    await getAllCustomers()
   }
 )
 
@@ -155,8 +162,3 @@ onBeforeMount(async () => {
 })
 </script>
 
-<style scoped>
-::v-deep(.el-table__body-wrapper tbody tr) {
-  cursor: pointer;
-}
-</style>

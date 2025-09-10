@@ -10,12 +10,10 @@ export interface Customers {
   total: number,
   lastPage: number,
 }
-const { t } = useI18n();
 
 export async function getCustomers(
   params: CustomerFilter
 ): Promise<Customers  | null> {
-  startLoading();
 
   try {
     const res: AxiosResponse = await api.get("/customers", { params });
@@ -25,8 +23,6 @@ export async function getCustomers(
     console.error(err);
     notify({ message: error.response?.data?.message[0] || 'Something went wrong', type: 'error' });
     return null;
-  } finally {
-    stopLoading();
   }
 }
 
@@ -48,6 +44,7 @@ export async function getCustomerByID(id: string, callback?: (res: AxiosResponse
 }
 
 export async function createCustomer(payload: FormData, callback?: () => void) {
+  const { t } = useI18n();
   startLoading();
 
   await api.post("/customers", payload)
@@ -65,12 +62,12 @@ export async function createCustomer(payload: FormData, callback?: () => void) {
 }
 
 export async function updateCustomer(id: string, payload: FormData, callback?: () => void) {
+
   startLoading();
 
   await api.patch(`/customers/${id}`, payload)
     .then(() => {
       callback?.();
-      notify({ message: t('customers.updated'), type: 'success' })
     })
     .catch((err) => {
       console.error(err)
@@ -82,6 +79,8 @@ export async function updateCustomer(id: string, payload: FormData, callback?: (
 }
 
 export async function deleteCustomer(id: string, callback?: () => void) {
+  const { t } = useI18n();
+
   startLoading();
 
   await api.delete(`/customers/${id}`)

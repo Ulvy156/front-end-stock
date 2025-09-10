@@ -1,13 +1,10 @@
 <template>
-  <el-input
-  style="width: 100%"
-  :placeholder
-  :suffix-icon="icon"
-  :size
-  :type
-  :clearable
-  :disabled
-  />
+  <el-input style="width: 100%" :placeholder :suffix-icon="icon" :size :type :clearable :disabled>
+    >
+    <template #suffix>
+      <slot name="icon" />
+    </template>
+  </el-input>
 </template>
 
 <script lang="ts" setup>

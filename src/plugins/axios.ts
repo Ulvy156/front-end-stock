@@ -1,4 +1,3 @@
-// src/utils/api.ts
 import axios from "axios";
 import { getCookie } from "@/utils/useCookies";
 import refreshToken from "@/services/refresh-token";
@@ -9,7 +8,23 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Attach access token to requests
+// Attach tokens to requests
+api.interceptors.request.use(config => {
+  const accessToken = getCookie("access_token");
+  const refreshTokenValue = getCookie("refresh_token");
+
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+
+  if (refreshTokenValue) {
+    config.headers["refresh_token"] = refreshTokenValue; // custom header
+  }
+
+  return config;
+});
+
+// Handle 401 responses
 api.interceptors.response.use(
   response => response,
   async error => {
@@ -24,13 +39,17 @@ api.interceptors.response.use(
         const token = getCookie("access_token");
         if (!token) throw new Error("Cannot refresh token");
 
-        // Update axios default headers so next requests use it
+        // Update headers for retry
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const refreshTokenValue = getCookie("refresh_token");
+        if (refreshTokenValue) {
+          api.defaults.headers.common['refresh_token'] = refreshTokenValue;
+        }
 
-        // Retry the original request
         originalRequest.headers = {
           ...originalRequest.headers,
           Authorization: `Bearer ${token}`,
+          "refresh_token": refreshTokenValue || "",
         };
 
         return api(originalRequest);
@@ -43,6 +62,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export { api };

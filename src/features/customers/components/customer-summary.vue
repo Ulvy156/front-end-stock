@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-x-2">
+  <div class="flex gap-x-5">
     <customerWidget
       class="bg-blue-50 text-blue-800"
       :title="$t('customers.total_customer')"
@@ -16,7 +16,7 @@
       :total="active_total_customer"
     />
     <customerWidget
-      class="bg-red-50 text-red-800"
+      class="bg-indigo-50 text-indigo-800'"
       :title="$t('customers.inactive_total_customer')"
       :total="inactive_total_customer"
     />

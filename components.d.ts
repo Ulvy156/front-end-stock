@@ -25,8 +25,10 @@ declare module 'vue' {
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElLink: typeof import('element-plus/es')['ElLink']
+    ElOption: typeof import('element-plus/es')['ElOption']
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElProgress: typeof import('element-plus/es')['ElProgress']
+    ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     InputField: typeof import('./src/components/reusable/input-field.vue')['default']
@@ -38,5 +40,8 @@ declare module 'vue' {
     TextArea: typeof import('./src/components/reusable/text-area.vue')['default']
     UserHome: typeof import('./src/components/user/user-home.vue')['default']
     UserNavbar: typeof import('./src/components/navbar/user-navbar.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

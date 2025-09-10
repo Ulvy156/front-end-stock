@@ -17,7 +17,9 @@
   "dashboard":{
     "total_revenue":"ប្រាក់ចំណូលសរុប",
     "total_expense":"ការចំណាយសរុប",
-    "total_order":"ចំនួនការកម្មង់"
+    "total_order":"ចំនួនការកម្មង់",
+    "total_product":"ចំនួនផលិតផលសរុប",
+    "total_staff":"ចំនួនបុគ្គលិកសរុប"
   },
   "imports":{
     "goods":"ទំនិញដែលនាំចូល",
@@ -68,5 +70,9 @@
     "title":"តើអ្នកប្រាកដថាចង់លុបទេ?",
     "content":""
   },
-  "current_data":"ទិន្នន័យបច្ចុប្បន្ន"
+  "current_data":"ទិន្នន័យបច្ចុប្បន្ន",
+  "location": {
+    "province":"ខេត្ត",
+    "district":"ស្រុក"
+  }
 }

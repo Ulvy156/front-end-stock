@@ -1,9 +1,9 @@
 <template>
-  <section class="grid grid-cols-1 gap-y-2 w-[99%]">
+  <section class="grid grid-cols-1 gap-y-2 ">
     <!-- customer summary -->
     <customerSummary />
     <!-- search sections -->
-    <customerFilter @on-search="filterData = $event"/>
+    <customerFilter @on-search="setFilterData($event)"/>
     <!-- customer table -->
     <CustomerTable :filterData="filterData" />
   </section>
@@ -23,5 +23,11 @@ const filterData = ref<CustomerFilter>({
   name: '',
   phone_number: ''
 })
+
+// functions
+function setFilterData(filter:CustomerFilter) {
+  filterData.value = filter;
+}
+
 
 </script>

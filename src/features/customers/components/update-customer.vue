@@ -1,11 +1,11 @@
 <template>
-  <el-drawer :with-header="false" :before-close="onClose" size="35%" v-model="drawerVisible">
-    <section class="flex flex-col gap-3">
+  <el-drawer :with-header="false" :before-close="onClose" size="50%" v-model="drawerVisible">
+    <section class="grid grid-cols-2 gap-3">
       <div class="flex items-center gap-x-1 col-span-2">
         <iconEdit class="size-7 text-blue-500" />
         <commonHeader :title="$t('customers.update_customer')" />
       </div>
-      <div class="flex flex-col items-center">
+      <div class="flex flex-col items-center col-span-2">
         <img class="w-1/3 m-auto rounded-md" :src="customerData.img_url" alt="" />
         <input class="bg-blue-50 h-fit w-fit p-1 rounded-md" type="file" @change="handleFile" />
       </div>
@@ -22,51 +22,68 @@
         <inputField v-model="customerData.telegram" :size="inputSize" id="telegram" />
       </div>
       <div>
+        <label for="telegram">{{ $t('location.province') }}</label>
+        <el-select size="large" v-model="selectedProvince.name" clearable placeholder="Select" style="width: 100%">
+          <el-option
+            v-for="item in provinces"
+            @click="selectedProvince.id = item.id"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name"
+          />
+        </el-select>
+      </div>
+      <div>
+        <label for="telegram">{{ $t('location.district') }}</label>
+        <el-select filterable :disabled="!selectedProvince.id" size="large" v-model="selectedDistrict.name" clearable placeholder="Select" style="width: 100%">
+          <el-option
+          v-for="item in districts"
+          @click="selectedDistrict.id = item.id"
+          :key="item.name"
+          :label="item.name"
+          :value="item.name" />
+        </el-select>
+      </div>
+      <div class="col-span-2">
         <label for="address">{{ $t('customers.address') }}</label>
         <textArea v-model="customerData.address" id="address" :maxlength="150" />
       </div>
-      <div>
+      <div class="col-span-2">
         <label for="mapUrl">{{ $t('customers.mapUrl') }}</label>
         <textArea v-model="customerData.mapUrl" :size="inputSize" id="mapUrl" :maxlength="300" />
       </div>
-      <div class="flex justify-end items-end">
-        <commonButton
-          @click="onClose"
-          size="large"
-          type="info"
-          :title="$t('modal_delete.cancel')"
-        />
-        <commonButton
-          @click="onUpdateCustomer"
-          size="large"
-          type="primary"
-          :title="$t('modal_delete.confirm')"
-        />
+      <div class="flex justify-end items-end col-span-2">
+        <commonButton @click="onClose" size="large" type="info" :title="$t('modal_delete.cancel')" />
+        <commonButton @click="onUpdateCustomer" size="large" type="primary" :title="$t('modal_delete.confirm')" />
       </div>
     </section>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onBeforeMount, ref, shallowRef, watch } from 'vue'
 import commonHeader from '@/components/common/common-header.vue'
 import iconEdit from '@/icons/icon-edit.vue'
 import inputField from '@/components/reusable/input-field.vue'
 import commonButton from '@/components/common/common-button.vue'
-import type { Customer } from '../interface/customer.interface'
+import type { Customer, CustomerDetails } from '../interface/customer.interface'
 import textArea from '@/components/reusable/text-area.vue'
 import { startLoading } from '@/composables/useLoading'
 import { getLocalStorage } from '@/utils/useLocalStorage'
 import { updateCustomer } from '@/services/customer-service'
+import { getAllProvinces, getProvinceWithDistrict } from '@/services/locations/province-service';
+import type { District, Province } from '../interface/location.interface'
+import { notify } from '@/composables/useNotify'
+import { useI18n } from "vue-i18n";
 
 const props = withDefaults(
   defineProps<{
+    customer: Customer,
     isVisible: boolean
-    customer: Customer
   }>(),
   {
-    isVisible: false,
     customer: () => ({}) as Customer,
+    isVisible: false
   },
 )
 
@@ -74,9 +91,12 @@ const emits = defineEmits<{
   (event: 'on-close'): void
   (event: 'on-updated'): void
 }>()
+const { t } = useI18n();
+
+// properties
 const drawerVisible = ref(false)
 const inputSize = 'large'
-const customerData = ref({
+const customerData = ref<CustomerDetails>({
   id: '',
   name: '',
   phone: '',
@@ -84,18 +104,46 @@ const customerData = ref({
   address: '',
   mapUrl: '',
   img_url: '',
+  lastOrderDate: null,
+  totalOrders: 0,
+  totalSpent: 0,
+  district_id: '',
+  created_by_user_id: '',
+  updated_by_user_id: null,
+  createdAt: '',
+  updatedAt: '',
+  district: undefined
 })
 const selectedFile = ref()
+const selectedProvince = ref<Province>({
+  id: 0,
+  name: '',
+  createdAt: '',
+  updatedAt: ''
+})
+const selectedDistrict = ref<District>({
+  id: '',
+  name: '',
+  province_id: 0,
+  createdAt: '',
+  updatedAt: '',
+  province: undefined
+})
+const provinces = shallowRef<Province[]>([])
+const districts = shallowRef<District[]>([])
 
 //methods
 function onClose() {
+  drawerVisible.value = false;
   emits('on-close')
-  drawerVisible.value = false
 }
+
 function onUpdated() {
+  drawerVisible.value = false;
   emits('on-updated')
-  drawerVisible.value = false
+  notify({ message: t('customers.updated'), type: 'success' })
 }
+
 function handleFile(e: Event) {
   const target = e.target as HTMLInputElement
   if (target.files && target.files.length > 0) {
@@ -103,12 +151,14 @@ function handleFile(e: Event) {
     customerData.value.img_url = URL.createObjectURL(target.files[0])
   }
 }
+
 async function onUpdateCustomer() {
   const formData = appendDataToForm()
   startLoading()
   appendDataToForm()
   await updateCustomer(customerData.value.id, formData, onUpdated);
 }
+
 function appendDataToForm() {
   const formData = new FormData()
   formData.append('name', customerData.value.name)
@@ -116,26 +166,49 @@ function appendDataToForm() {
   formData.append('telegram', customerData.value.telegram)
   formData.append('address', customerData.value.address)
   formData.append('mapUrl', customerData.value.mapUrl)
+  formData.append('district_id', selectedDistrict.value.id)
   formData.append('updated_by_user_id', getLocalStorage('user_id') ?? '')
 
-  if(selectedFile.value){
+  if (selectedFile.value) {
     formData.append('file', selectedFile.value)
   }
   return formData;
 }
 
-watch(
-  () => props.customer,
-  () => {
-    customerData.value = props.customer
-  },
-)
+// props toggle visible
 watch(
   () => props.isVisible,
   () => {
-    if (!props.isVisible) return
-
-    drawerVisible.value = props.isVisible
-  },
+    drawerVisible.value = props.isVisible;
+  }
 )
+watch(
+  () => props.customer,
+  () => {
+    customerData.value = props.customer as CustomerDetails;
+    // props data from customer-table
+    customerData.value = props.customer as CustomerDetails;
+    // default province for customer
+    if(customerData.value.district?.province){
+      selectedProvince.value = customerData.value.district?.province;
+      selectedDistrict.value = customerData.value.district;
+    }
+  }
+)
+// if user selected province show district based on province
+watch(selectedProvince, async() => {
+  await getProvinceWithDistrict(selectedProvince.value.id)
+  .then((res)=>{
+    districts.value = res.data.data.district;
+  })
+})
+
+onBeforeMount(async () => {
+
+  await getAllProvinces()
+    .then((res) => {
+      provinces.value = res.data.data;
+
+    })
+})
 </script>

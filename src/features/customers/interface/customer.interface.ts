@@ -1,3 +1,5 @@
+import type { District } from "./location.interface"
+
 export interface Customer {
   id: string
   name: string
@@ -18,4 +20,23 @@ export interface CustomerFilter {
   limit: number;
   name: string;
   phone_number: string;
+}
+
+export interface CustomerDetails {
+  id: string
+  name: string
+  phone: string
+  telegram: string
+  address: string
+  img_url: string
+  lastOrderDate: string | null
+  totalOrders: number
+  totalSpent: number
+  mapUrl: string
+  district_id: string
+  created_by_user_id: string
+  updated_by_user_id: string | null
+  createdAt: string
+  updatedAt: string
+  district: District | undefined
 }

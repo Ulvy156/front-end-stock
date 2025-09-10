@@ -21,7 +21,8 @@
         :icon="iconSearch"
       />
     </div>
-
+    <button type="submit" style="display: none"></button>
+    <commonButton @submit.prevent="onSearch"/>
   </form>
 </template>
 
@@ -29,7 +30,9 @@
 import inputField from '@/components/reusable/input-field.vue'
 import iconSearch from '@/icons/icon-search.vue'
 import { ref } from 'vue';
+import debounce from 'lodash/debounce';
 import type { CustomerFilter } from '../interface/customer.interface';
+import commonButton from '@/components/common/common-button.vue';
 //emits
 const emit = defineEmits<{
   (event: 'on-search', value: CustomerFilter): void
@@ -43,7 +46,8 @@ const filterData = ref<CustomerFilter>({
   phone_number: ''
 })
 
-function onSearch() {
-  emit('on-search', filterData.value)
-}
+// Debounced search to prevent quick repeated calls
+const onSearch = debounce(() => {
+  emit('on-search', { ...filterData.value });
+}, 1000); // 1s delay
 </script>
