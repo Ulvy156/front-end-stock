@@ -21,7 +21,9 @@ const filterData = ref<CustomerFilter>({
   page: 1,
   limit: 20,
   name: '',
-  phone_number: ''
+  phone_number: '',
+  province_id: 0,
+  district_id: ''
 })
 
 // functions

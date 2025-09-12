@@ -9,6 +9,7 @@ export interface Customers {
   customers: Customer[],
   total: number,
   lastPage: number,
+  current_total: number
 }
 
 export async function getCustomers(

@@ -8,9 +8,9 @@ type BtnSize = 'large' | 'default' | 'small';
 
 withDefaults(
   defineProps<{
-    title?: string
+    title?: string,
     type?: BtnType,
-    size?: BtnSize
+    size?: BtnSize,
   }>(),
   {
     title: 'ចូលប្រពន្ធ័',

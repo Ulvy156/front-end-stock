@@ -71,7 +71,7 @@
               <commonAvatar class="cursor-pointer" :src="user_image" />
               <div class="flex flex-col gap-y-2">
                 <h3 class="text-[var(--text-gray)] text-[15px]">{{ getLocalStorage('name') }}</h3>
-                <p class="text-[12px] text-gray-600 capitalize">{{ getLocalStorage('role') }}</p>
+                <tagForm :title="getLocalStorage('role') ?? ''" type="primary"/>
               </div>
             </div>
             <template #dropdown>
@@ -126,6 +126,7 @@ import { getLocalStorage } from '@/utils/useLocalStorage'
 import { api } from '@/plugins/axios'
 import { removeCookie } from '@/utils/useCookies'
 import inputField from '@/components/reusable/input-field.vue'
+import tagForm from '@/components/reusable/tag-form.vue'
 // properties
 const previousActiveIndex = ref(0)
 const closeMenubar = ref(false)

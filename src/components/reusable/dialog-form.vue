@@ -15,7 +15,7 @@
     </template>
     <template #footer>
       <el-button @click="onClose">{{ $t("modal_delete.cancel") }}</el-button>
-      <el-button type="danger" @click="onConfirm">
+      <el-button type="primary" @click="onConfirm">
         {{ $t("modal_delete.confirm") }}
       </el-button>
     </template>

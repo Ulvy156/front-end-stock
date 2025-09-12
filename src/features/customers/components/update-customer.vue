@@ -22,26 +22,30 @@
         <inputField v-model="customerData.telegram" :size="inputSize" id="telegram" />
       </div>
       <div>
-        <label for="telegram">{{ $t('location.province') }}</label>
-        <el-select size="large" v-model="selectedProvince.name" clearable placeholder="Select" style="width: 100%">
-          <el-option
-            v-for="item in provinces"
-            @click="selectedProvince.id = item.id"
-            :key="item.name"
-            :label="item.name"
-            :value="item.name"
-          />
+        <label for="province">{{ $t('location.province') }}</label>
+        <el-select id="province" size="large" v-model="selectedProvince.name" clearable placeholder="Select"
+          style="width: 100%">
+          <el-option v-for="item in provinces" @click="selectedProvince.id = item.id" :key="item.name"
+            :label="item.name" :value="item.name" />
         </el-select>
       </div>
       <div>
-        <label for="telegram">{{ $t('location.district') }}</label>
-        <el-select filterable :disabled="!selectedProvince.id" size="large" v-model="selectedDistrict.name" clearable placeholder="Select" style="width: 100%">
+        <label for="district">{{ $t('location.district') }}</label>
+        <el-select id="district" filterable :disabled="!selectedProvince.id" size="large"
+          v-model="selectedDistrict.name" clearable placeholder="Select" style="width: 100%">
+          <el-option v-for="item in districts" @click="selectedDistrict.id = item.id" :key="item.name"
+            :label="item.name" :value="item.name" />
+        </el-select>
+      </div>
+      <div>
+        <label for="customer_type">{{ $t('customers.type') }}</label>
+        <el-select id="customer_type" size="large" v-model="selectedCustomerType" clearable placeholder="Select"
+          style="width: 100%">
           <el-option
-          v-for="item in districts"
-          @click="selectedDistrict.id = item.id"
-          :key="item.name"
-          :label="item.name"
-          :value="item.name" />
+          v-for="value in customerDataTypeKh"
+          :key="value"
+          :value="value"
+          :label="value" />
         </el-select>
       </div>
       <div class="col-span-2">
@@ -66,7 +70,7 @@ import commonHeader from '@/components/common/common-header.vue'
 import iconEdit from '@/icons/icon-edit.vue'
 import inputField from '@/components/reusable/input-field.vue'
 import commonButton from '@/components/common/common-button.vue'
-import type { Customer, CustomerDetails } from '../interface/customer.interface'
+import { customerDataTypeKh, type Customer, type CustomerDetails, type CustomerTypeKhmer } from '../interface/customer.interface'
 import textArea from '@/components/reusable/text-area.vue'
 import { startLoading } from '@/composables/useLoading'
 import { getLocalStorage } from '@/utils/useLocalStorage'
@@ -75,6 +79,7 @@ import { getAllProvinces, getProvinceWithDistrict } from '@/services/locations/p
 import type { District, Province } from '../interface/location.interface'
 import { notify } from '@/composables/useNotify'
 import { useI18n } from "vue-i18n";
+import { getCustomerKhmerLabel, getCustomerTypeLabel } from '@/utils/useCustomerType'
 
 const props = withDefaults(
   defineProps<{
@@ -112,7 +117,8 @@ const customerData = ref<CustomerDetails>({
   updated_by_user_id: null,
   createdAt: '',
   updatedAt: '',
-  district: undefined
+  district: undefined,
+  type: 'RETAIL'
 })
 const selectedFile = ref()
 const selectedProvince = ref<Province>({
@@ -131,7 +137,7 @@ const selectedDistrict = ref<District>({
 })
 const provinces = shallowRef<Province[]>([])
 const districts = shallowRef<District[]>([])
-
+const selectedCustomerType = ref<CustomerTypeKhmer>()
 //methods
 function onClose() {
   drawerVisible.value = false;
@@ -166,6 +172,7 @@ function appendDataToForm() {
   formData.append('telegram', customerData.value.telegram)
   formData.append('address', customerData.value.address)
   formData.append('mapUrl', customerData.value.mapUrl)
+  formData.append('type', customerData.value.type)
   formData.append('district_id', selectedDistrict.value.id)
   formData.append('updated_by_user_id', getLocalStorage('user_id') ?? '')
 
@@ -182,12 +189,23 @@ watch(
     drawerVisible.value = props.isVisible;
   }
 )
+// convert khmer type to english ( customer type )
+watch(
+  selectedCustomerType,
+  () => {
+    if(!selectedCustomerType.value) return;
+    customerData.value.type = getCustomerKhmerLabel(selectedCustomerType.value)
+  }
+)
+// convert english type to khmer ( Customer type )
 watch(
   () => props.customer,
   () => {
     customerData.value = props.customer as CustomerDetails;
     // props data from customer-table
     customerData.value = props.customer as CustomerDetails;
+    // convert from english to khmer
+    selectedCustomerType.value = getCustomerTypeLabel(customerData.value.type);
     // default province for customer
     if(customerData.value.district?.province){
       selectedProvince.value = customerData.value.district?.province;
@@ -198,9 +216,9 @@ watch(
 // if user selected province show district based on province
 watch(selectedProvince, async() => {
   await getProvinceWithDistrict(selectedProvince.value.id)
-  .then((res)=>{
-    districts.value = res.data.data.district;
-  })
+    .then((res) => {
+      districts.value = res.data.data.district;
+    })
 })
 
 onBeforeMount(async () => {
