@@ -97,3 +97,25 @@ export async function deleteCustomer(id: string, callback?: () => void) {
       stopLoading()
     })
 }
+
+export async function getCustomerSummary() {
+  return await api.get('/customers/customer-summary')
+  .then((res) => {
+    return res.data.data;
+  })
+  .catch((err)=>{
+    console.error(err)
+    notify({ message: err.response.data.message[0], type: 'error' })
+  })
+}
+
+export async function getCustomerDetails(id: string) {
+  return await api.get(`/customers/customer-details/${id}`)
+  .then((res) => {
+    return res.data.data;
+  })
+  .catch((err)=>{
+    console.error(err)
+    notify({ message: err.response.data.message[0], type: 'error' })
+  })
+}

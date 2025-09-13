@@ -1,9 +1,14 @@
 <template>
-  <section class="flex w-full min-h-screen overflow-auto">
+  <section class="flex w-full h-screen overflow-hidden">
     <nav :class="closeMenubar ? 'close-menu' : 'open-menu'" class="shadow-xl sticky z-10 left-0 top-0 bg-gray-800">
       <!-- side bar -->
-      <div class="flex cursor-pointer blue m-auto py-4 items-center justify-between shadow-sm px-5">
-        <svg @click="closeMenubar = !closeMenubar" xmlns="http://www.w3.org/2000/svg" class="size-8"
+      <div
+      :class="{'px-1': closeMenubar, 'px-5':!closeMenubar}"
+      class="flex cursor-pointer blue m-auto py-4 items-center justify-between shadow-sm ">
+        <!-- <img @click="closeMenubar = !closeMenubar" class="w-[20%] p-2 bg-white" src="../../public/logo.png" alt=""> -->
+        <svg @click="closeMenubar = !closeMenubar" xmlns="http://www.w3.org/2000/svg"
+          class="size-8 shadow-lg shadow-blue-300 bg-none"
+          :class="{'m-auto  ': closeMenubar}"
           viewBox="0 0 48 48">
           <path fill="#cfd8dc" d="M5 19h38v19H5z" />
           <path fill="#b0bec5" d="M5 38h38v4H5z" />
@@ -35,19 +40,6 @@
             <path d="M 160,64 V 240" />
           </g>
         </svg>
-        <!-- <svg
-          :class="{ hidden: closeMenubar }"
-          @click="closeMenubar = !closeMenubar"
-          xmlns="http://www.w3.org/2000/svg"
-          class="size-5 cursor-pointer text-white"
-          viewBox="0 0 16 16"
-        >
-          <path
-            fill="currentColor"
-            d="M10.315 5.032a2.11 2.11 0 0 0 2.064-1.678h1.833a.425.425 0 0 0 .3-.723a.43.43 0 0 0-.3-.124h-1.83a2.11 2.11 0 0 0-4.136 0H1.79a.424.424 0 0 0 0 .847h6.46a2.11 2.11 0 0 0 2.066 1.678m0-.88a1.23 1.23 0 1 1 0-2.46a1.23 1.23 0 0 1 0 2.46m-4.404 5.977A2.11 2.11 0 0 0 7.98 8.443l6.233-.007a.425.425 0 0 0 .3-.722a.43.43 0 0 0-.3-.124l-6.233.006a2.11 2.11 0 0 0-4.133 0L1.79 7.59a.423.423 0 0 0 0 .846l2.057.007a2.11 2.11 0 0 0 2.066 1.686m0-.88a1.23 1.23 0 1 1 0-2.46a1.23 1.23 0 0 1 0 2.46m4.398 5.938a2.11 2.11 0 0 0 2.068-1.694l1.833.026a.425.425 0 0 0 .3-.723a.43.43 0 0 0-.3-.124l-1.836-.027a2.11 2.11 0 0 0-4.13 0l-6.457.027a.424.424 0 0 0 0 .847l6.454-.026a2.11 2.11 0 0 0 2.068 1.694m0-.88a1.23 1.23 0 1 1 0-2.46a1.23 1.23 0 0 1 0 2.46"
-            clip-rule="evenodd"
-          />
-        </svg> -->
       </div>
       <!-- menu list -->
       <aside class="flex flex-col justify-between h-[90%]" v-show="!closeMenubar">

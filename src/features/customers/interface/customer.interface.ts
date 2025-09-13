@@ -56,3 +56,13 @@ export interface CustomerSummary {
   total_wholesale: number,
   total_retails_wholesale: number
 }
+
+export interface CreatedByUser {
+  name: string,
+  role: string,
+  email: string,
+  img_url: string,
+  phone: string,
+  updatedAt: string,
+  createdAt: string,
+}

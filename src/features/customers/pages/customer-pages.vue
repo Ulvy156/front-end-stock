@@ -10,9 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import customerSummary from '../components/customer-summary.vue'
-import customerFilter from '../components/customer-filter.vue'
-import CustomerTable from '../components/customer-table.vue'
+import customerSummary from '../components/customer-page/customer-summary.vue'
+import customerFilter from '../components/customer-page/customer-filter.vue'
+import CustomerTable from '../components/customer-page/customer-table.vue'
 import { ref } from 'vue'
 import type { CustomerFilter } from '../interface/customer.interface'
 
@@ -23,7 +23,8 @@ const filterData = ref<CustomerFilter>({
   name: '',
   phone_number: '',
   province_id: 0,
-  district_id: ''
+  district_id: '',
+  type: null
 })
 
 // functions

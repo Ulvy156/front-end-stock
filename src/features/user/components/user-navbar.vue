@@ -110,7 +110,7 @@ function addActiveLink() {
     case path === "/dashboard":
       addClassNameById('dashboard', className);
       break;
-    case path === '/customer':
+    case path.includes('customer'):
       addClassNameById('customer', className);
       break;
   }

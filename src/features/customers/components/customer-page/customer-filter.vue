@@ -111,13 +111,13 @@
 import inputField from '@/components/reusable/input-field.vue'
 import iconSearch from '@/icons/icon-search.vue'
 import { onBeforeMount, ref, shallowRef, watch } from 'vue'
-import type { CustomerFilter, CustomerTypeKhmer } from '../interface/customer.interface'
+import type { CustomerFilter, CustomerTypeKhmer } from '../../interface/customer.interface'
 import commonButton from '@/components/common/common-button.vue'
 import dialogForm from '@/components/reusable/dialog-form.vue'
 import { getAllProvinces, getProvinceWithDistrict } from '@/services/locations/province-service'
-import type { District, Province } from '../interface/location.interface'
+import type { District, Province } from '../../interface/location.interface'
 import commonHeader from '@/components/common/common-header.vue'
-import { customerDataTypeKh } from '../interface/customer.interface'
+import { customerDataTypeKh } from '../../interface/customer.interface'
 import { getCustomerKhmerLabel } from '@/utils/useCustomerType'
 //emits
 const emit = defineEmits<{
@@ -127,7 +127,7 @@ const emit = defineEmits<{
 //properties
 const filterData = ref<CustomerFilter>({
   page: 1,
-  limit: 30,
+  limit: 20,
   name: '',
   phone_number: '',
   province_id: 0,
