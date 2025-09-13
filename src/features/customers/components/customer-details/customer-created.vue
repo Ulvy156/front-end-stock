@@ -9,7 +9,7 @@
     </div>
     <section class="flex items-center gap-5">
       <imageForm class-name="col-span-3 w-[10%] h-[10%] rounded-full" :src="created_by?.img_url ?? ''" />
-      <div class="grid grid-cols-3 gap-8">
+      <div class="grid grid-cols-3 gap-3">
         <commonContent> {{ $t('user.name') }}: {{ created_by?.name }} </commonContent>
         <div class="flex items-center gap-x-2">
           <commonContent>
@@ -18,7 +18,8 @@
           <iconCopy @click="copyToClipboard(formatPhoneDisplay(created_by?.phone ?? ''))" />
         </div>
         <commonContent>
-          {{ $t('user.role') }}: {{ created_by?.role }}
+          {{ $t('user.role') }}:
+          <tagForm :title="created_by?.role" effect="dark" type="success"/>
         </commonContent>
         <commonContent>
           {{ $t('customers.details.created_at') }}: {{ toKhmerDateTime(created_by?.createdAt) }}
@@ -40,6 +41,7 @@ import iconCopy from '@/icons/icon-copy.vue'
 import { copyToClipboard } from '@/utils/useClipboard'
 import type { CreatedByUser } from '../../interface/customer.interface'
 import { toKhmerDateTime } from '@/utils/useDate'
+import tagForm from '@/components/reusable/tag-form.vue'
 
 defineProps<{
   created_by: CreatedByUser

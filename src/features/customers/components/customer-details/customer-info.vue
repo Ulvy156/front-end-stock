@@ -28,7 +28,7 @@
         :src="customerDetails?.img_url ?? ''"
       />
       <div class="flex flex-col justify-between">
-        <div class="grid grid-cols-3 gap-8">
+        <div class="grid grid-cols-3 gap-3">
           <commonContent> {{ $t('customers.name') }}: {{ customerDetails?.name }} </commonContent>
           <div class="flex items-center gap-x-2">
             <commonContent>
@@ -49,7 +49,8 @@
             {{ $t('customers.totalSpent') }}: {{ customerDetails?.totalSpent }}
           </commonContent>
           <commonContent>
-            {{ $t('customers.type') }}: {{ getCustomerTypeLabel(customerDetails?.type ?? 'BOTH') }}
+            {{ $t('customers.type') }}:
+            <tagForm :title="getCustomerTypeLabel(customerDetails?.type ?? 'BOTH')" effect="dark" type="success"/>
           </commonContent>
           <commonContent>
             {{ $t('location.province') }}: {{ customerDetails?.district?.province?.name }}
@@ -75,6 +76,7 @@ import { formatPhoneDisplay } from '@/utils/formatPhoneDisplay'
 import iconCopy from '@/icons/icon-copy.vue'
 import { copyToClipboard } from '@/utils/useClipboard'
 import type { CustomerDetails } from '../../interface/customer.interface'
+import tagForm from '@/components/reusable/tag-form.vue'
 
 defineProps<{
   customerDetails: CustomerDetails

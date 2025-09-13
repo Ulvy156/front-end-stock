@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-col gap-y-5">
+  <section class="flex flex-col gap-y-5 mb-5">
     <customerInfo :customerDetails/>
     <customerCreated :created_by/>
     <customerUpdated :updated_by/>
