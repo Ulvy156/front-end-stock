@@ -1,6 +1,6 @@
 <template>
   <el-input
-    style="width: 100%"
+    style="width: 100%;"
     :placeholder
     :suffix-icon="icon"
     :size :type

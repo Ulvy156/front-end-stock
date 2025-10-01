@@ -3,7 +3,7 @@
     <!-- customer summary -->
     <customerSummary />
     <!-- search sections -->
-    <customerFilter @on-search="setFilterData($event)"/>
+    <customerFilter @on-search="setFilterData($event)" @on-create="createdCustomer"/>
     <!-- customer table -->
     <CustomerTable :filterData="filterData" />
   </section>
@@ -31,6 +31,8 @@ const filterData = ref<CustomerFilter>({
 function setFilterData(filter:CustomerFilter) {
   filterData.value = filter;
 }
+function createdCustomer() {
 
+}
 
 </script>

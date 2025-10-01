@@ -3,7 +3,6 @@ import { notify } from "@/composables/useNotify";
 import type { Customer, CustomerFilter } from "@/features/customers/interface/customer.interface";
 import { api } from "@/plugins/axios";
 import type { AxiosError, AxiosResponse } from "axios";
-import { useI18n } from "vue-i18n";
 
 export interface Customers {
   customers: Customer[],
@@ -27,7 +26,6 @@ export async function getCustomers(
   }
 }
 
-
 export async function getCustomerByID(id: string, callback?: (res: AxiosResponse<Customer>) => void) {
   startLoading();
 
@@ -45,13 +43,11 @@ export async function getCustomerByID(id: string, callback?: (res: AxiosResponse
 }
 
 export async function createCustomer(payload: FormData, callback?: () => void) {
-  const { t } = useI18n();
   startLoading();
 
   await api.post("/customers", payload)
     .then(() => {
       callback?.();
-      notify({ message: t('customers.created'), type: 'success' })
     })
     .catch((err) => {
       console.error(err)
@@ -80,14 +76,12 @@ export async function updateCustomer(id: string, payload: FormData, callback?: (
 }
 
 export async function deleteCustomer(id: string, callback?: () => void) {
-  const { t } = useI18n();
 
   startLoading();
 
   await api.delete(`/customers/${id}`)
     .then(() => {
       callback?.();
-      notify({ message: t('customers.deleted'), type: 'success' })
     })
     .catch((err) => {
       console.error(err)

@@ -74,6 +74,7 @@
       <paginationPage :total="totalCustomers" @page-change="currentFilterData.page = $event" />
     </div>
   </div>
+
   <!-- pop-up delete  -->
   <component
     :is="dialogForm"
@@ -112,6 +113,10 @@ import { formatPhoneDisplay } from '@/utils/formatPhoneDisplay'
 import { useDelay } from '@/utils/useDelay'
 import tagForm from '@/components/reusable/tag-form.vue'
 import { getCustomerTypeLabel } from '@/utils/useCustomerType'
+import { notify } from '@/composables/useNotify'
+import { useI18n } from "vue-i18n";
+import { useCustomerStore } from '../../stores/useCustomer'
+
 //props
 const props = defineProps<{
   filterData: CustomerFilter
@@ -149,7 +154,8 @@ const currentFilterData = ref<CustomerFilter>({
   type: null,
 })
 const currentTotalCustomer = ref(0)
-
+const { t } = useI18n();
+const useCustomer = useCustomerStore();
 //functions
 async function hideUpdatedForm() {
   toggleUpdateCustomer.value = false
@@ -194,7 +200,10 @@ function convertCustomerType(type: string) {
 async function onConfirmDelete() {
   startLoading()
 
-  await deleteCustomer(selectedCustomer.value.id, getAllCustomers)
+  await deleteCustomer(selectedCustomer.value.id, ()=> {
+    notify({ message: t('customers.deleted'), type: 'success' })
+  });
+  await getAllCustomers();
   isDelete.value = false
 }
 
@@ -213,6 +222,16 @@ watch(
   async () => {
     await getAllCustomers();
   },
+)
+//watch customer created
+watch(
+  () => useCustomer.isCreatedCustomer,
+  async() => {
+    if(!useCustomer.isCreatedCustomer) return;
+    useCustomer.isCreatedCustomer = false;
+    await getAllCustomers();
+
+  }
 )
 onBeforeMount(async () => {
   await getAllCustomers()
