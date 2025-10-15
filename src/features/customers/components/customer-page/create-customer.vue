@@ -116,7 +116,7 @@ const customerData = ref<CustomerDetails>({
   createdAt: '',
   updatedAt: '',
   district: undefined,
-  type: 'RETAIL'
+  type: 'RETAILS'
 })
 const selectedFile = ref()
 const selectedProvince = ref<Province>({
@@ -160,6 +160,8 @@ function handleFile(e: Event) {
 
 async function onCreateCustomer() {
   const formData = appendDataToForm()
+  console.log(formData);
+
   startLoading()
   appendDataToForm()
   await createCustomer(formData, createdCustomerSuccess);
@@ -173,7 +175,7 @@ function appendDataToForm() {
   formData.append('address', customerData.value.address)
   formData.append('mapUrl', customerData.value.mapUrl)
   formData.append('type', customerData.value.type)
-  formData.append('district_id', selectedDistrict.value.id)
+  formData.append('province_id', selectedProvince.value.id.toString())
   formData.append('created_by_user_id', getLocalStorage('user_id') ?? '')
 
   if (selectedFile.value) {
@@ -202,8 +204,6 @@ watch(
 watch(
   () => selectedProvince.value.name,
   async() => {
-  console.log(selectedProvince.value);
-
   await getProvinceWithDistrict(selectedProvince.value.id)
     .then((res) => {
       districts.value = res.data.data.district;

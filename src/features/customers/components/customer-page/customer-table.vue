@@ -7,7 +7,7 @@
     style="width: 100%; min-width: 50%; max-height: 55vh; height: auto"
   >
     <!-- Name + Avatar -->
-    <el-table-column prop="name" :label="$t('customers.name')" width="250">
+    <el-table-column :label="$t('customers.name')" width="250">
       <template #default="{ row }">
         <div class="flex items-center gap-x-1">
           <commonAvatar :src="row.img_url" />
@@ -19,7 +19,7 @@
     <!-- Province / District -->
     <el-table-column :label="$t('location.province') + ' / ' + $t('location.district')">
       <template #default="{ row }">
-        {{ row.district.province.name }} / {{ row.district.name }}
+        {{ row.province.name }} / {{ row.province.district[0].name }}
       </template>
     </el-table-column>
 
@@ -140,7 +140,7 @@ const selectedCustomer = shallowRef<Customer>({
   img_url: '',
   createdAt: '',
   updatedAt: '',
-  type: 'RETAIL',
+  type: 'RETAILS',
 })
 const totalPage = ref(0)
 const toggleUpdateCustomer = ref(false)
@@ -189,7 +189,7 @@ function onClickUpdate(customer: Customer) {
 }
 
 function convertCustomerType(type: string) {
-  if (type === 'RETAIL') {
+  if (type === 'RETAILS') {
     return 'primary'
   } else if (type === 'WHOLESALE') {
     return 'success'

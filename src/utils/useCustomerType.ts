@@ -8,16 +8,16 @@ export const getCustomerTypeLabel = (type: CustomerTypeEnglish) => {
 // translate from khmer to english
 export const getCustomerKhmerLabel = (type: CustomerTypeKhmer) => {
   if(type === 'លក់រាយ'){
-    return 'RETAIL'
+    return 'RETAILS'
   } else if (type === 'លក់ដុំ'){
     return 'WHOLESALE'
   }
-  return 'BOTH';
+  return 'VIP';
 }
 export const CustomerType = {
-    RETAIL: 'លក់រាយ',
+    RETAILS: 'លក់រាយ',
     WHOLESALE: 'លក់ដុំ',
-    BOTH: 'លក់រាយនិងលក់ដុំ'
+    VIP: 'លក់រាយនិងលក់ដុំ'
 } as const;
 
 

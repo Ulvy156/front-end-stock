@@ -1,9 +1,10 @@
 import type { District } from "./location.interface"
 
-export type CustomerType = 'RETAIL' | 'WHOLESALE' | 'BOTH';
-export type CustomerTypeKhmer = 'លក់រាយ' | 'លក់ដុំ' | 'លក់រាយនិងលក់ដុំ';
-export const customerDataTypeEng = ['RETAIL', 'WHOLESALE', 'BOTH'];
-export const customerDataTypeKh = ['លក់រាយ', 'លក់ដុំ', 'លក់រាយនិងលក់ដុំ'];
+export type CustomerType = 'RETAILS' | 'WHOLESALE' | 'VIP';
+export type CustomerTypeKhmer = 'លក់រាយ' | 'លក់ដុំ' | 'VIP';
+export const customerDataTypeEng = ['RETAILS', 'WHOLESALE', 'VIP'];
+export const customerDataTypeKh = ['លក់រាយ', 'លក់ដុំ', 'VIP'];
+
 export interface Customer {
   id: string
   name: string
