@@ -4,7 +4,7 @@
     v-loading="loadingCustomers"
     :data="customers"
     stripe
-    style="width: 100%; min-width: 50%; max-height: 55vh; height: auto"
+    style="width: 100%; min-width: 50%; height: 55vh;"
   >
     <!-- Name + Avatar -->
     <el-table-column :label="$t('customers.name')" width="250">
