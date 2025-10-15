@@ -11,14 +11,12 @@ const api = axios.create({
 // Attach tokens to requests
 api.interceptors.request.use(config => {
   const accessToken = getCookie("access_token");
-  const refreshTokenValue = getCookie("refresh_token");
+
+  // send cookies (HttpOnly) automatically
+  config.withCredentials = true;
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
-  }
-
-  if (refreshTokenValue) {
-    config.headers["refresh_token"] = refreshTokenValue; // custom header
   }
 
   return config;

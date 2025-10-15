@@ -68,7 +68,6 @@ async function login() {
   .then(async (res) => {
 
     setCookie('access_token', res.data.accessToken, Number(import.meta.env.VITE_JWT_EXPIRES_IN)) // 1h
-    setCookie('refresh_token', res.data.refreshToken, Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN)) // 7d
     // store user info
     await getUserProfile();
     redirectByRole(res.data.is_admin);
@@ -95,7 +94,6 @@ async function getUserProfile() {
 }
 
 onBeforeMount(()=>{
-  removeCookie('refresh_token')
   removeCookie('access_token')
 })
 </script>
