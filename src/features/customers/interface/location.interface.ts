@@ -4,7 +4,6 @@ export interface District {
   province_id: number
   createdAt: string
   updatedAt: string
-  province: Province | undefined
 }
 
 export interface Province {
@@ -13,3 +12,4 @@ export interface Province {
   createdAt: string
   updatedAt: string
 }
+
