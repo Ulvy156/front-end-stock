@@ -110,7 +110,6 @@ const updateCustomer = defineAsyncComponent(() => import('./update-customer.vue'
 import type { Customer, CustomerFilter } from '../../interface/customer.interface'
 import { deleteCustomer, getCustomers } from '@/services/customer-service'
 import { formatPhoneDisplay } from '@/utils/formatPhoneDisplay'
-import { useDelay } from '@/utils/useDelay'
 import tagForm from '@/components/reusable/tag-form.vue'
 import { getCustomerTypeLabel } from '@/utils/useCustomerType'
 import { notify } from '@/composables/useNotify'
@@ -172,7 +171,6 @@ async function getAllCustomers() {
   totalCustomers.value = data?.total ?? 0
   currentTotalCustomer.value = data?.current_total ?? 0
   // delay for show
-  await useDelay(100)
   // end lading
   loadingCustomers.value = false
 }
