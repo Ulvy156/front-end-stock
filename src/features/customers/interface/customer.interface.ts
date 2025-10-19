@@ -1,4 +1,4 @@
-import type { District } from "./location.interface"
+import type { District, Province } from "./location.interface"
 
 export type CustomerType = 'RETAILS' | 'WHOLESALE' | 'VIP';
 export type CustomerTypeKhmer = 'លក់រាយ' | 'លក់ដុំ' | 'VIP';
@@ -48,7 +48,8 @@ export interface CustomerDetails {
   updated_by_user_id: string | null
   createdAt: string
   updatedAt: string
-  district: District | undefined
+  district: District
+  province: Province
 }
 
 export interface CustomerSummary {

@@ -17,7 +17,7 @@ export const getCustomerKhmerLabel = (type: CustomerTypeKhmer) => {
 export const CustomerType = {
     RETAILS: 'លក់រាយ',
     WHOLESALE: 'លក់ដុំ',
-    VIP: 'លក់រាយនិងលក់ដុំ'
+    VIP: 'VIP'
 } as const;
 
 

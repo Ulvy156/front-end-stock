@@ -19,7 +19,7 @@
     <!-- Province / District -->
     <el-table-column :label="$t('location.province') + ' / ' + $t('location.district')">
       <template #default="{ row }">
-        {{ row.province.name }} / {{ row.province.district[0].name }}
+        {{ row.province.name }} / {{ row.district.name }}
       </template>
     </el-table-column>
 

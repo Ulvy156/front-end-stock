@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, shallowRef, watch } from 'vue'
+import { onMounted, ref, shallowRef, watch } from 'vue'
 import commonHeader from '@/components/common/common-header.vue'
 import iconEdit from '@/icons/icon-edit.vue'
 import inputField from '@/components/reusable/input-field.vue'
@@ -117,8 +117,20 @@ const customerData = ref<CustomerDetails>({
   updated_by_user_id: null,
   createdAt: '',
   updatedAt: '',
-  district: undefined,
-  type: 'RETAIL'
+  district: {
+    id: '',
+    name: '',
+    province_id: 0,
+    createdAt: '',
+    updatedAt: ''
+  },
+  type: 'RETAILS',
+  province: {
+    id: 0,
+    name: '',
+    createdAt: '',
+    updatedAt: ''
+  }
 })
 const selectedFile = ref()
 const selectedProvince = ref<Province>({
@@ -133,7 +145,6 @@ const selectedDistrict = ref<District>({
   province_id: 0,
   createdAt: '',
   updatedAt: '',
-  province: undefined
 })
 const provinces = shallowRef<Province[]>([])
 const districts = shallowRef<District[]>([])
@@ -202,26 +213,39 @@ watch(
   () => props.customer,
   () => {
     customerData.value = props.customer as CustomerDetails;
+
     // props data from customer-table
     customerData.value = props.customer as CustomerDetails;
     // convert from english to khmer
     selectedCustomerType.value = getCustomerTypeLabel(customerData.value.type);
     // default province for customer
-    if(customerData.value.district?.province){
-      selectedProvince.value = customerData.value.district?.province;
+    if(customerData.value.province){
+      selectedProvince.value = customerData.value.province;
       selectedDistrict.value = customerData.value.district;
     }
   }
 )
 // if user selected province show district based on province
-watch(selectedProvince, async() => {
-  await getProvinceWithDistrict(selectedProvince.value.id)
-    .then((res) => {
-      districts.value = res.data.data.district;
-    })
+watch(()=> selectedProvince.value.name,
+    async(curr, prev) => {
+      // prevent from first time load
+      if(!prev) return;
+      // run only if user selected new province
+      await getProvinceWithDistrict(selectedProvince.value.id)
+      .then((res) => {
+        districts.value = res.data.data.district;
+        // reassign district to empty if province change
+        selectedDistrict.value = {
+          id: '',
+          name: '',
+          province_id: 0,
+          createdAt: '',
+          updatedAt: ''
+        };
+      });
 })
 
-onBeforeMount(async () => {
+onMounted(async () => {
 
   await getAllProvinces()
     .then((res) => {
