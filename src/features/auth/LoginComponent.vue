@@ -35,11 +35,13 @@
             <label for="checkbox" >បង្ហាញពាក្យសម្ងាត់</label>
           </div>
       </div>
-      <commonButton title="ចូលប្រពន្ធ័"/>
+      <commonButton @click.prevent="login" title="ចូលប្រពន្ធ័"/>
     </section>
     <img
     class="w-1/2"
     src="../../assets//undraw_access-account_aydp.svg" alt="login-image" >
+
+    <button type="submit" style="display: none"></button>
   </form>
 </template>
 
@@ -64,10 +66,10 @@ const isShowPassword = ref(false);
 async function login() {
   await api.post('/auth/login', loginData.value)
   .then(async (res) => {
-    console.log(res.data);
 
-    setCookie('access_token', res.data.accessToken, 3600) // 1h
-    setCookie('refresh_token', res.data.refreshToken, 604800) // 1h
+    setCookie('access_token', res.data.accessToken, Number(import.meta.env.VITE_JWT_EXPIRES_IN)) // 5mn
+    setCookie('is_logged', '1', Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN))
+
     // store user info
     await getUserProfile();
     redirectByRole(res.data.is_admin);
@@ -81,16 +83,16 @@ async function login() {
 
 function redirectByRole(is_admin: boolean) {
   if(!is_admin){
-    location.href = '/user'
+    location.href = '/'
   }
 }
 async function getUserProfile() {
   await api.get('/auth/profile')
   .then((res) => {
-    setCookie('user_id', res.data.id, 604800) // 1h
-    setCookie('is_admin', res.data.is_admin, 604800) // 1h
-
+    setLocalStorage('user_id', res.data.id);
+    setLocalStorage('role', res.data.role);
     setLocalStorage('name', res.data.name);
   })
 }
+
 </script>

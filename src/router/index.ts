@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import userRoute from './user.route'
 import sharedRoute from './shared.route'
 import { getCookie } from '@/utils/useCookies'
-
+import refreshToken from '@/services/refresh-token'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -21,15 +21,26 @@ const router = createRouter({
 export default router
 
 
-router.beforeEach((to, from, next) => {
-  const token = getCookie("access_token")
-  const isLoggedIn = !!token
+router.beforeEach(async (to, from, next) => {
+  let is_logged = getCookie("is_logged");
+  // if not logged in try to refresh is_logged
+  if (is_logged !== '1') {
+    try {
+      await refreshToken();
+      is_logged = getCookie("is_logged");
+    } catch (err) {
+      console.error("Refresh token failed:", err);
+    }
+  }
+
+  const isLoggedIn = is_logged === '1';
 
   if (to.meta.requiresAuth && !isLoggedIn) {
-    next("/login") // protected route but not logged in
+    location.href = '/login'
   } else if (to.path === "/login" && isLoggedIn) {
-    next("/dashboard") // redirect logged in user away from login
+    next("/dashboard");
   } else {
-    next() // go normally
+    next();
   }
-})
+});
+

@@ -1,58 +1,62 @@
-// src/utils/api.ts
-import axios from "axios"
-import { getCookie, setCookie, removeCookie } from "@/utils/useCookies"
-import router from "@/router"
+import axios from "axios";
+import { getCookie, setCookie } from "@/utils/useCookies";
+import refreshToken from "@/services/refresh-token";
+import router from "@/router";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 10000
-})
+  timeout: 10000,
+  withCredentials: true,
+});
 
-// Attach access token to requests
-api.interceptors.request.use(config => {
-  const token = getCookie("access_token") // or localStorage.getItem("access_token")
-  if (token) config.headers.Authorization = `Bearer ${token}`
-  return config
-})
+// Attach access token
+api.interceptors.request.use((config) => {
+  const accessToken = getCookie("access_token");
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  return config;
+});
 
-// Response interceptor for 401
+// Handle 401
 api.interceptors.response.use(
-  response => response,
-  async error => {
-    const originalRequest = error.config
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true
+      originalRequest._retry = true;
 
       try {
-        // refresh token from storage
-        const refreshToken = getCookie("refresh_token")
-        if (!refreshToken) throw new Error("No refresh token")
+        const newToken = await refreshToken(); // refresh & get new token
 
-        // call refresh endpoint
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
-          { refreshToken } // send in body
-        )
+        if (!newToken) {
+          console.warn("⚠️ Refresh failed: no new token returned");
+          setCookie('is_logged', '0', Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN)) 
+          router.push("/login");
+          return Promise.reject(error);
+        }
 
-        // save new tokens
-        setCookie("access_token", data.access_token, 900) // 15mn
-        setCookie("refresh_token", data.refresh_token, 604800) // 7 days
+        // attach new Authorization header
+        originalRequest.headers = {
+          ...originalRequest.headers,
+          Authorization: `Bearer ${newToken}`,
+        };
+        setCookie('is_logged', '1', Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN)) 
 
-        // retry original request
-        originalRequest.headers.Authorization = `Bearer ${data.access_token}`
-        return api(originalRequest)
+        // retry the failed request
+        return axios.request(originalRequest);
       } catch (err) {
-        // refresh failed → logout
-        removeCookie("access_token")
-        removeCookie("refresh_token")
-        router.push("/login")
-        return Promise.reject(err)
+        setCookie('is_logged', '0', Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN)) 
+        console.error("❌ Refresh & retry failed:", err);
+        router.push("/login");
+        return Promise.reject(err);
       }
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
-export { api }
+
+export { api };

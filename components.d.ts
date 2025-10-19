@@ -8,19 +8,37 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AdminNavbar: typeof import('./src/components/navbar/admin-navbar.vue')['default']
     CommonAvatar: typeof import('./src/components/common/common-avatar.vue')['default']
     CommonButton: typeof import('./src/components/common/common-button.vue')['default']
+    CommonContent: typeof import('./src/components/common/common-content.vue')['default']
     CommonHeader: typeof import('./src/components/common/common-header.vue')['default']
+    DialogForm: typeof import('./src/components/reusable/dialog-form.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
+    ElButton: typeof import('element-plus/es')['ElButton']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElDrawer: typeof import('element-plus/es')['ElDrawer']
+    ElDropdown: typeof import('element-plus/es')['ElDropdown']
+    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
+    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElLink: typeof import('element-plus/es')['ElLink']
+    ElOption: typeof import('element-plus/es')['ElOption']
+    ElPagination: typeof import('element-plus/es')['ElPagination']
+    ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTag: typeof import('element-plus/es')['ElTag']
+    ImageForm: typeof import('./src/components/reusable/image-form.vue')['default']
     InputField: typeof import('./src/components/reusable/input-field.vue')['default']
-    LoginComponent: typeof import('./src/components/LoginComponent.vue')['default']
+    PaginationPage: typeof import('./src/components/reusable/pagination-page.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    UserHome: typeof import('./src/components/user/user-home.vue')['default']
-    UserNavbar: typeof import('./src/components/navbar/user-navbar.vue')['default']
+    SelectForm: typeof import('./src/components/reusable/select-form.vue')['default']
+    StatsWidget: typeof import('./src/components/reusable/stats-widget.vue')['default']
+    TagForm: typeof import('./src/components/reusable/tag-form.vue')['default']
+    TextArea: typeof import('./src/components/reusable/text-area.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

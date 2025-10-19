@@ -1,11 +1,16 @@
 <template>
   <el-input
-  style="width: 100%"
-  :placeholder
-  :suffix-icon="icon"
-  :size
-  :type
-  />
+    style="width: 100%;"
+    :placeholder
+    :suffix-icon="icon"
+    :size :type
+    :clearable
+    :disabled>
+    >
+    <template #suffix>
+      <slot name="icon" />
+    </template>
+  </el-input>
 </template>
 
 <script lang="ts" setup>
@@ -15,7 +20,9 @@ interface Input {
   placeholder: string,
   icon: unknown | null,
   size: 'large' | 'default' | 'small',
-  type: string
+  type: string,
+  disabled: boolean,
+  clearable: boolean
 
 }
 
@@ -25,7 +32,9 @@ withDefaults(
     placeholder: "Please input...",
     icon: undefined,
     size: 'default',
-    type: 'text'
+    type: 'text',
+    disabled: false,
+    clearable: true
   }
 )
 </script>

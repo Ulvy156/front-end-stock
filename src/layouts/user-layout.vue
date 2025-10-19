@@ -11,3 +11,4 @@ import mainLayout from './main-layout.vue';
 import userNavbar from '@/features/user/components/user-navbar.vue';
 
 </script>
+
