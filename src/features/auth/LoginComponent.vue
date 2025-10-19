@@ -50,9 +50,9 @@ import iconEmail from '@/icons/icon-email.vue'
 import iconPassword from '@/icons/icon-password.vue'
 import inputField from '@/components/reusable/input-field.vue'
 import commonButton from '@/components/common/common-button.vue'
-import { onBeforeMount, ref } from 'vue'
+import { ref } from 'vue'
 import { api } from '@/plugins/axios'
-import { removeCookie, setCookie } from '@/utils/useCookies'
+import { setCookie } from '@/utils/useCookies'
 import { setLocalStorage } from '@/utils/useLocalStorage'
 
 //properties
@@ -67,7 +67,9 @@ async function login() {
   await api.post('/auth/login', loginData.value)
   .then(async (res) => {
 
-    setCookie('access_token', res.data.accessToken, Number(import.meta.env.VITE_JWT_EXPIRES_IN)) // 1h
+    setCookie('access_token', res.data.accessToken, Number(import.meta.env.VITE_JWT_EXPIRES_IN)) // 5mn
+    setCookie('is_logged', '1', Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN))
+
     // store user info
     await getUserProfile();
     redirectByRole(res.data.is_admin);
@@ -93,7 +95,4 @@ async function getUserProfile() {
   })
 }
 
-onBeforeMount(()=>{
-  removeCookie('access_token')
-})
 </script>
