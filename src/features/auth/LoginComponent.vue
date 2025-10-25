@@ -68,10 +68,10 @@ async function login() {
   .then(async (res) => {
 
     setCookie('access_token', res.data.accessToken, Number(import.meta.env.VITE_JWT_EXPIRES_IN)) // 5mn
-    setCookie('is_logged', '1', Number(import.meta.env.VITE_JWT_REFRESH_EXPIRES_IN))
+    setCookie('is_logged', '1', Number(import.meta.env.VITE_JWT_EXPIRES_IN))
 
     // store user info
-    await getUserProfile();
+    await getUserProfile(res.data.user_id);
     redirectByRole(res.data.is_admin);
 
   })
@@ -86,12 +86,15 @@ function redirectByRole(is_admin: boolean) {
     location.href = '/'
   }
 }
-async function getUserProfile() {
-  await api.get('/auth/profile')
+async function getUserProfile(id: string) {
+  await api.get(`/user/${id}`)
   .then((res) => {
-    setLocalStorage('user_id', res.data.id);
-    setLocalStorage('role', res.data.role);
-    setLocalStorage('name', res.data.name);
+    console.log(res.data);
+
+    setLocalStorage('user_id', res.data.data.id);
+    setLocalStorage('role_id', res.data.data.role.id);
+    setLocalStorage('role_name', res.data.data.role.name);
+    setLocalStorage('name', res.data.data.name);
   })
 }
 

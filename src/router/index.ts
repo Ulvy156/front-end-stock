@@ -20,13 +20,14 @@ const router = createRouter({
 
 export default router
 
-
 router.beforeEach(async (to, from, next) => {
+
   let is_logged = getCookie("is_logged");
-  // if not logged in try to refresh is_logged
+
   if (is_logged !== '1') {
     try {
-      await refreshToken();
+      await refreshToken(); // wait until token refreshed
+      // re-check cookie after refresh
       is_logged = getCookie("is_logged");
     } catch (err) {
       console.error("Refresh token failed:", err);
@@ -36,11 +37,14 @@ router.beforeEach(async (to, from, next) => {
   const isLoggedIn = is_logged === '1';
 
   if (to.meta.requiresAuth && !isLoggedIn) {
-    location.href = '/login'
-  } else if (to.path === "/login" && isLoggedIn) {
-    next("/dashboard");
-  } else {
-    next();
+    return next('/login'); // use next() instead of location.href
   }
+
+  if (to.path === "/login" && isLoggedIn) {
+    return next('/');
+  }
+
+  next();
 });
+
 
