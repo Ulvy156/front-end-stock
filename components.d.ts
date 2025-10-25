@@ -28,6 +28,7 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
+    FileUpload: typeof import('./src/components/reusable/file-upload.vue')['default']
     ImageForm: typeof import('./src/components/reusable/image-form.vue')['default']
     InputField: typeof import('./src/components/reusable/input-field.vue')['default']
     PaginationPage: typeof import('./src/components/reusable/pagination-page.vue')['default']
