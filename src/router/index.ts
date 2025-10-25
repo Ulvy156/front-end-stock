@@ -22,25 +22,23 @@ export default router
 
 router.beforeEach(async (to, from, next) => {
 
-  let is_logged = getCookie("is_logged");
+  let access_token = getCookie("access_token");
 
-  if (is_logged !== '1') {
+  if (access_token) {
     try {
       await refreshToken(); // wait until token refreshed
       // re-check cookie after refresh
-      is_logged = getCookie("is_logged");
+      access_token = getCookie("access_token");
     } catch (err) {
       console.error("Refresh token failed:", err);
     }
   }
 
-  const isLoggedIn = is_logged === '1';
-
-  if (to.meta.requiresAuth && !isLoggedIn) {
+  if (to.meta.requiresAuth && !access_token) {
     return next('/login'); // use next() instead of location.href
   }
 
-  if (to.path === "/login" && isLoggedIn) {
+  if (to.path === "/login" && access_token) {
     return next('/');
   }
 
