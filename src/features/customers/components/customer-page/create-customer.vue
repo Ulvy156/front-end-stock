@@ -7,7 +7,8 @@
       </div>
       <div class="flex flex-col items-center col-span-2">
         <img class="w-1/3 m-auto rounded-md" :src="customerData.img_url" alt="" />
-        <input class="bg-blue-50 h-fit w-fit p-1 rounded-md" type="file" @change="handleFile" />
+        <fileUpload v-model:file="selectedFile"/>
+        <!-- <input accept="image/*" size="1MB" class="bg-blue-50 h-fit w-fit p-1 rounded-md" type="file" @change="handleFile" /> -->
       </div>
       <div>
         <label for="name">{{ $t('customers.name') }}</label>
@@ -81,6 +82,7 @@ import { notify } from '@/composables/useNotify'
 import { useI18n } from "vue-i18n";
 import { getCustomerKhmerLabel } from '@/utils/useCustomerType'
 import { useCustomerStore } from '../../stores/useCustomer'
+import fileUpload from '@/components/reusable/file-upload.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -159,14 +161,6 @@ function createdCustomerSuccess() {
   customerStore.setCustomerCreated(true);
   notify({ message: t('customers.created'), type: 'success' })
   onClose();
-}
-
-function handleFile(e: Event) {
-  const target = e.target as HTMLInputElement
-  if (target.files && target.files.length > 0) {
-    selectedFile.value = target.files[0] // store selected file
-    customerData.value.img_url = URL.createObjectURL(target.files[0])
-  }
 }
 
 async function onCreateCustomer() {
