@@ -59,7 +59,7 @@
 
   <!-- create customer -->
    <component
-    @on-close="isCreate = false"
+    @on-close="onCreatedCustomer"
     :isVisible="isCreate"
     :is="createCustomer"
    />
@@ -82,6 +82,7 @@ const createCustomer = defineAsyncComponent(()=> import('./create-customer.vue')
 //emits
 const emit = defineEmits<{
   (event: 'on-search', value: CustomerFilter): void,
+  (event: 'on-created', value: boolean): void,
 }>()
 
 //properties
@@ -105,6 +106,11 @@ const selectedCustomerType = ref<CustomerTypeKhmer>()
 const onSearch = () => {
   isVisible.value = false
   emit('on-search', { ...filterData.value })
+}
+const onCreatedCustomer = () => {
+  // emit event to parent for fetching customer summary
+  isCreate.value = false;
+  emit('on-created', true);
 }
 // convert khmer type to english ( customer type )
 watch(

@@ -115,8 +115,20 @@ const customerData = ref<CustomerDetails>({
   updated_by_user_id: null,
   createdAt: '',
   updatedAt: '',
-  district: undefined,
-  type: 'RETAILS'
+  type: 'RETAILS',
+  district: {
+    id: '',
+    name: '',
+    createdAt: '',
+    updatedAt: '',
+    province_id: 0
+  },
+  province: {
+    id: 0,
+    name: '',
+    createdAt: '',
+    updatedAt: ''
+  }
 })
 const selectedFile = ref()
 const selectedProvince = ref<Province>({
@@ -131,7 +143,6 @@ const selectedDistrict = ref<District>({
   province_id: 0,
   createdAt: '',
   updatedAt: '',
-  province: undefined
 })
 const provinces = shallowRef<Province[]>([])
 const districts = shallowRef<District[]>([])
@@ -160,8 +171,6 @@ function handleFile(e: Event) {
 
 async function onCreateCustomer() {
   const formData = appendDataToForm()
-  console.log(formData);
-
   startLoading()
   appendDataToForm()
   await createCustomer(formData, createdCustomerSuccess);
@@ -176,6 +185,7 @@ function appendDataToForm() {
   formData.append('mapUrl', customerData.value.mapUrl)
   formData.append('type', customerData.value.type)
   formData.append('province_id', selectedProvince.value.id.toString())
+  formData.append('district_id', selectedDistrict.value.id.toString())
   formData.append('created_by_user_id', getLocalStorage('user_id') ?? '')
 
   if (selectedFile.value) {

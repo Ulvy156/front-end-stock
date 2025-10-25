@@ -1,11 +1,11 @@
 <template>
   <section class="grid grid-cols-1 gap-y-2 ">
     <!-- customer summary -->
-    <customerSummary />
+    <customerSummary :isCreatedNewCustomer />
     <!-- search sections -->
-    <customerFilter @on-search="setFilterData($event)"/>
+    <customerFilter @on-search="setFilterData($event)" @on-created="isCreatedNewCustomer = $event"/>
     <!-- customer table -->
-    <CustomerTable :filterData="filterData" />
+    <CustomerTable :filterData="filterData"  />
   </section>
 </template>
 
@@ -26,6 +26,7 @@ const filterData = ref<CustomerFilter>({
   district_id: '',
   type: null
 })
+const isCreatedNewCustomer = ref(false);
 
 // functions
 function setFilterData(filter:CustomerFilter) {
