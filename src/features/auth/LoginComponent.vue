@@ -89,7 +89,6 @@ function redirectByRole(is_admin: boolean) {
 async function getUserProfile(id: string) {
   await api.get(`/user/${id}`)
   .then((res) => {
-    console.log(res.data);
 
     setLocalStorage('user_id', res.data.data.id);
     setLocalStorage('role_id', res.data.data.role.id);
