@@ -6,14 +6,28 @@ import { setupNProgress } from './plugins/nprogress';
 
 import App from './App.vue'
 import router from './router'
+import { getCookie } from './utils/useCookies';
+import refreshToken from './services/refresh-token';
 
+async function initApp() {
+  const is_logged = getCookie("is_logged")
 
-const app = createApp(App)
+  if (is_logged !== '1') {
+    try {
+      await refreshToken();
+      console.log('ss');
 
-app.use(i18n)
-app.use(createPinia())
-app.use(router)
+    } catch (err) {
+      console.warn("Token refresh failed:", err)
+    }
+  }
 
-setupNProgress(router);
+  const app = createApp(App)
+  app.use(i18n)
+  app.use(createPinia())
+  app.use(router)
+  setupNProgress(router)
+  app.mount('#app')
+}
 
-app.mount('#app')
+initApp()

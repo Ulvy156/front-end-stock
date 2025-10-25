@@ -10,7 +10,6 @@ export default async function refreshToken() {
     );
 
     if (data?.accessToken) {
-
       // store it
       setCookie(
         "access_token",
