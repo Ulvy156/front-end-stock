@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import customerSummary from '../components/customer-page/customer-summary.vue'
+import customerSummary from '../components/customer-page/total-customer-summary.vue'
 import customerFilter from '../components/customer-page/customer-filter.vue'
 import CustomerTable from '../components/customer-page/customer-table.vue'
 import { ref } from 'vue'

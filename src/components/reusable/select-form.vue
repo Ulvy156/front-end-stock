@@ -8,11 +8,12 @@
       clearable
       :placeholder="placeholder"
       size="large"
+      v-model="selectedItem"
     >
       <el-option
         v-for="item in items"
-        @click="selectedItem = item"
-        :key="item"
+        :key="item.id"
+        :value="item.label"
       />
     </el-select>
   </div>
@@ -20,25 +21,28 @@
 
 <script setup lang="ts" >
 import { ref } from 'vue'
-
+interface Select {
+  id: number | string;
+  label: string;
+}
 withDefaults(
   defineProps<{
-    items: T[],
-    id: string,
-    placeholder: string,
-    label: string
+    items: Select[],
+    id?: string,
+    placeholder?: string,
+    label?: string
   }>(),
   {
-    items: [],
+    items: ()=> [] as Select[],
     id: '',
     placeholder: 'Please select',
     label: ''
   }
 )
 
-const selectedItem = ref<T>()
+const selectedItem = ref<Select>()
 
 defineEmits<{
-  (e: 'update:modelValue', value: T): void
+  (e: 'update:modelValue', value: Select): void
 }>()
 </script>

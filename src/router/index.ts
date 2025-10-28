@@ -24,7 +24,7 @@ router.beforeEach(async (to, from, next) => {
 
   let access_token = getCookie("access_token");
 
-  if (access_token) {
+  if (!access_token) {
     try {
       await refreshToken(); // wait until token refreshed
       // re-check cookie after refresh
