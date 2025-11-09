@@ -11,7 +11,10 @@
       <template #default="{ row }">
         <div class="flex items-center gap-x-1">
           <commonAvatar :src="row.img_url" />
-          <p>{{ row.name }}</p>
+          <div>
+            <p>{{ row.name }}</p>
+            <span class="text-[12px] text-gray-400 font-extralight">{{ row.phone }}</span>
+          </div>
         </div>
       </template>
     </el-table-column>
@@ -20,13 +23,6 @@
     <el-table-column :label="$t('location.province') + ' / ' + $t('location.district')">
       <template #default="{ row }">
         {{ row.province.name }} / {{ row.district.name }}
-      </template>
-    </el-table-column>
-
-    <!-- Phone -->
-    <el-table-column prop="phone" :label="$t('customers.phone_number')">
-      <template #default="{ row }">
-        {{ row.phone }}
       </template>
     </el-table-column>
 

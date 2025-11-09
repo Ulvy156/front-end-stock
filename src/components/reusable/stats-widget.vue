@@ -1,5 +1,5 @@
 <template>
-  <article class="flex flex-col justify-between items-start p-5 w-full shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer rounded-md">
+  <article class="flex flex-col justify-between items-start p-5 w-full shadow-sm hover:shadow-lg transition-shadow duration-300 rounded-md">
     <div class="flex justify-between items-center w-full">
       <h3 class="text-md text-gray-400">{{ title }}</h3>
       <slot>

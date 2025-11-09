@@ -16,5 +16,4 @@
 import customerSummary from '../components/customer-details/customer-summary.vue'
 import customerOrders from '../components/customer-details/customer-orders.vue'
 
-
 </script>
