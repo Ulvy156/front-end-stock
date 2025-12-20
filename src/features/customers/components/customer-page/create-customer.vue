@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, shallowRef, watch } from 'vue'
+import { ref, shallowRef, watch } from 'vue'
 import commonHeader from '@/components/common/common-header.vue'
 import iconAdd from '@/icons/icon-add.vue'
 import inputField from '@/components/reusable/input-field.vue'
@@ -76,13 +76,14 @@ import textArea from '@/components/reusable/text-area.vue'
 import { startLoading } from '@/composables/useLoading'
 import { getLocalStorage } from '@/utils/useLocalStorage'
 import { createCustomer } from '@/services/customer-service'
-import { getAllProvinces, getProvinceWithDistrict } from '@/services/locations/province-service';
+import { getProvinceWithDistrict } from '@/services/locations/province-service';
 import type { District, Province } from '../../interface/location.interface'
 import { notify } from '@/composables/useNotify'
 import { useI18n } from "vue-i18n";
 import { getCustomerKhmerLabel } from '@/utils/useCustomerType'
 import { useCustomerStore } from '../../stores/useCustomer'
 import fileUpload from '@/components/reusable/file-upload.vue'
+import { queryAllProvinces } from '@/queries/locations/province-query'
 
 const props = withDefaults(
   defineProps<{
@@ -146,7 +147,9 @@ const selectedDistrict = ref<District>({
   createdAt: '',
   updatedAt: '',
 })
-const provinces = shallowRef<Province[]>([])
+const {
+  data: provinces,
+} = queryAllProvinces();
 const districts = shallowRef<District[]>([])
 const selectedCustomerType = ref<CustomerTypeKhmer>()
 const customerStore = useCustomerStore();
@@ -214,12 +217,5 @@ watch(
     })
 })
 
-onBeforeMount(async () => {
 
-  await getAllProvinces()
-    .then((res) => {
-      provinces.value = res.data.data;
-
-    })
-})
 </script>
