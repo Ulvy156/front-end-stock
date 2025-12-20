@@ -1,7 +1,7 @@
 <template>
   <el-table
     :highlight-current-row="true"
-    v-loading="loadingCustomers"
+    v-loading="isFetching"
     :data="customers"
     stripe
     style="width: 100%; min-width: 50%; height: 55vh;"
@@ -11,7 +11,10 @@
       <template #default="{ row }">
         <div class="flex items-center gap-x-1">
           <commonAvatar :src="row.img_url" />
-          <p>{{ row.name }}</p>
+          <div>
+            <p>{{ row.name }}</p>
+            <span class="text-[12px] text-gray-400 font-extralight">{{ row.phone }}</span>
+          </div>
         </div>
       </template>
     </el-table-column>
@@ -20,13 +23,6 @@
     <el-table-column :label="$t('location.province') + ' / ' + $t('location.district')">
       <template #default="{ row }">
         {{ row.province.name }} / {{ row.district.name }}
-      </template>
-    </el-table-column>
-
-    <!-- Phone -->
-    <el-table-column prop="phone" :label="$t('customers.phone_number')">
-      <template #default="{ row }">
-        {{ row.phone }}
       </template>
     </el-table-column>
 
@@ -101,20 +97,21 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onBeforeMount, ref, shallowRef, watch } from 'vue'
+import { computed, defineAsyncComponent, ref, shallowRef, watch } from 'vue'
 import commonAvatar from '@/components/common/common-avatar.vue'
 import paginationPage from '@/components/reusable/pagination-page.vue'
 import { startLoading } from '@/composables/useLoading'
 const dialogForm = defineAsyncComponent(() => import('@/components/reusable/dialog-form.vue'))
 const updateCustomer = defineAsyncComponent(() => import('./update-customer.vue'))
 import type { Customer, CustomerFilter } from '../../interface/customer.interface'
-import { deleteCustomer, getCustomers } from '@/services/customer-service'
+import { deleteCustomer } from '@/services/customer-service'
 import { formatPhoneDisplay } from '@/utils/formatPhoneDisplay'
 import tagForm from '@/components/reusable/tag-form.vue'
 import { getCustomerTypeLabel } from '@/utils/useCustomerType'
 import { notify } from '@/composables/useNotify'
 import { useI18n } from "vue-i18n";
 import { useCustomerStore } from '../../stores/useCustomer'
+import { queryAllCustomer } from '@/queries/customers/customers-query'
 
 //props
 const props = defineProps<{
@@ -122,9 +119,6 @@ const props = defineProps<{
 }>()
 
 // properties
-const customers = shallowRef<Customer[]>([])
-const loadingCustomers = ref(false)
-const totalCustomers = ref(0)
 const isDelete = ref(false)
 const selectedCustomer = shallowRef<Customer>({
   id: '',
@@ -141,7 +135,6 @@ const selectedCustomer = shallowRef<Customer>({
   updatedAt: '',
   type: 'RETAILS',
 })
-const totalPage = ref(0)
 const toggleUpdateCustomer = ref(false)
 const currentFilterData = ref<CustomerFilter>({
   page: 1,
@@ -152,27 +145,13 @@ const currentFilterData = ref<CustomerFilter>({
   district_id: '',
   type: null,
 })
-const currentTotalCustomer = ref(0)
 const { t } = useI18n();
 const useCustomer = useCustomerStore();
+const { data, isFetching } = queryAllCustomer(currentFilterData.value)
+
 //functions
 async function hideUpdatedForm() {
   toggleUpdateCustomer.value = false
-  await getAllCustomers()
-}
-async function getAllCustomers() {
-  //start loading
-  loadingCustomers.value = true
-
-  const data = await getCustomers(currentFilterData.value)
-
-  customers.value = data?.customers ?? []
-  totalPage.value = data?.lastPage ?? 0
-  totalCustomers.value = data?.total ?? 0
-  currentTotalCustomer.value = data?.current_total ?? 0
-  // delay for show
-  // end lading
-  loadingCustomers.value = false
 }
 
 function onClickDelete(customer: Customer) {
@@ -201,9 +180,14 @@ async function onConfirmDelete() {
   await deleteCustomer(selectedCustomer.value.id, ()=> {
     notify({ message: t('customers.deleted'), type: 'success' })
   });
-  await getAllCustomers();
   isDelete.value = false
 }
+
+// computed
+const customers = computed(() => data.value?.customers ?? [])
+// const totalPage = computed(() => data.value?.lastPage ?? 0)
+const totalCustomers = computed(() => data.value?.total ?? 0)
+// const currentTotalCustomer = computed(() => data.value?.current_total ?? 0)
 
 // watch
 // props filter from customer-filter
@@ -211,14 +195,12 @@ watch(
   () => props.filterData,
   async () => {
     currentFilterData.value = props.filterData
-    await getAllCustomers()
   },
 )
 // watch pagination
 watch(
   () => currentFilterData.value.page,
   async () => {
-    await getAllCustomers();
   },
 )
 //watch customer created
@@ -227,11 +209,7 @@ watch(
   async() => {
     if(!useCustomer.isCreatedCustomer) return;
     useCustomer.isCreatedCustomer = false;
-    await getAllCustomers();
 
   }
 )
-onBeforeMount(async () => {
-  await getAllCustomers()
-})
 </script>

@@ -24,7 +24,7 @@
       </aside>
     </nav>
 
-    <main class="w-full min-h-screen h-auto overflow-auto">
+    <main class="w-full min-h-screen h-auto overflow-auto ">
       <div class="py-2 px-6 flex justify-between items-end gap-5 w-full sticky top-0 z-50 shadow-sm bg-white">
         <inputField style="width: 30%" size="large">
           <template #icon>

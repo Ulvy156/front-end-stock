@@ -79,8 +79,8 @@
 
 <script setup lang="ts">
 import customerWidget from '@/components/reusable/stats-widget.vue'
-import { getCustomerSummary } from '@/services/customer-service'
-import { onBeforeMount, ref, watch } from 'vue'
+import { queryCustomerSummary } from '@/queries/customers/customers-query';
+import { computed, watch } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -91,8 +91,8 @@ const props = withDefaults(
   }
 )
 
-const customerSummary = ref({
-  both: 0,
+const { data, refetch } = queryCustomerSummary();
+const customerSummary = computed(() => data.value?? {  both: 0,
   retails: 0,
   wholesale: 0,
   total: 0,
@@ -101,27 +101,17 @@ const customerSummary = ref({
     retails: 0,
     wholesale: 0,
     total: 0,
-  },
-})
-
-async function customerSummaries() {
-  const res = await getCustomerSummary()
-  customerSummary.value = res
-}
+  }});
 
 watch(
   () => props.isCreatedNewCustomer,
-  async (newVal) => {
+  (newVal) => {
     if (newVal) {
-      await customerSummaries()
+      refetch();
     }
   }
 )
 
-
-onBeforeMount(async () => {
-  await customerSummaries();
-})
 </script>
 
 <style scoped>

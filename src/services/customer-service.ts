@@ -11,9 +11,22 @@ export interface Customers {
   current_total: number
 }
 
+export interface CustomerSummary {
+  both: 0,
+  retails: 0,
+  wholesale: 0,
+  total: 0,
+  percentChanges: {
+    both: 0,
+    retails: 0,
+    wholesale: 0,
+    total: 0,
+  }
+}
+
 export async function getCustomers(
-  params: CustomerFilter
-): Promise<Customers  | null> {
+  params?: CustomerFilter
+): Promise<Customers | null> {
 
   try {
     const res: AxiosResponse = await api.get("/customers", { params });
@@ -92,24 +105,26 @@ export async function deleteCustomer(id: string, callback?: () => void) {
     })
 }
 
-export async function getCustomerSummary() {
+export async function getCustomerSummary(): Promise<CustomerSummary> {
   return await api.get('/customers/customer-summary')
-  .then((res) => {
-    return res.data.data;
-  })
-  .catch((err)=>{
-    console.error(err)
-    notify({ message: err.response.data.message[0], type: 'error' })
-  })
+    .then((res) => {
+      console.log(res.data.data);
+      
+      return res.data.data;
+    })
+    .catch((err) => {
+      console.error(err)
+      notify({ message: err.response.data.message[0], type: 'error' })
+    })
 }
 
 export async function getCustomerDetails(id: string) {
   return await api.get(`/customers/customer-details/${id}`)
-  .then((res) => {
-    return res.data.data;
-  })
-  .catch((err)=>{
-    console.error(err)
-    notify({ message: err.response.data.message[0], type: 'error' })
-  })
+    .then((res) => {
+      return res.data.data;
+    })
+    .catch((err) => {
+      console.error(err)
+      notify({ message: err.response.data.message[0], type: 'error' })
+    })
 }

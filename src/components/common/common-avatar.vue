@@ -1,23 +1,33 @@
 <template>
-   <el-avatar
-      :src="avatarSrc"
-    />
+  <el-avatar
+    :src="currentSrc"
+    @error="onError"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, watch } from 'vue'
 
 interface Avatar {
   src?: string
 }
-const props =   defineProps<Avatar>();
 
+const props = defineProps<Avatar>()
 
-const avatarSrc = computed(() => {
-  return props.src && props.src.length > 0
-    ? props.src
-    : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';
-});
+const fallback =
+  'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
 
+const currentSrc = ref(props.src || fallback)
 
+// update if prop changes
+watch(
+  () => props.src,
+  (newSrc) => {
+    currentSrc.value = newSrc || fallback
+  }
+)
+
+function onError() {
+  currentSrc.value = fallback
+}
 </script>

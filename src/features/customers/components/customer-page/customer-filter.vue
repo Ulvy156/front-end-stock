@@ -69,14 +69,15 @@
 import inputField from '@/components/reusable/input-field.vue'
 import iconSearch from '@/icons/icon-search.vue'
 import iconAdd from '@/icons/icon-add.vue'
-import { defineAsyncComponent, onBeforeMount, ref, shallowRef, watch } from 'vue'
+import { defineAsyncComponent, ref, shallowRef, watch } from 'vue'
 import type { CustomerFilter, CustomerTypeKhmer } from '../../interface/customer.interface'
 import dialogForm from '@/components/reusable/dialog-form.vue'
-import { getAllProvinces, getProvinceWithDistrict } from '@/services/locations/province-service'
-import type { District, Province } from '../../interface/location.interface'
+import { getProvinceWithDistrict } from '@/services/locations/province-service'
+import type { District } from '../../interface/location.interface'
 import commonHeader from '@/components/common/common-header.vue'
 import { customerDataTypeKh } from '../../interface/customer.interface'
 import { getCustomerKhmerLabel } from '@/utils/useCustomerType'
+import { queryAllProvinces } from '@/queries/locations/province-query'
 const createCustomer = defineAsyncComponent(()=> import('./create-customer.vue'));
 
 //emits
@@ -97,7 +98,9 @@ const filterData = ref<CustomerFilter>({
 })
 const isVisible = ref(false)
 const isCreate = ref(false);
-const provinces = shallowRef<Province[]>([])
+const {
+  data: provinces,
+} = queryAllProvinces();
 const districts = shallowRef<District[]>([])
 const selectedProvince = ref('')
 const selectedDistrict = ref('')
@@ -138,11 +141,6 @@ watch(selectedProvince, async () => {
   })
 })
 
-onBeforeMount(async () => {
-  await getAllProvinces().then((res) => {
-    provinces.value = res.data.data
-  })
-})
 </script>
 
 
